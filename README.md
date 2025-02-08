@@ -1,3 +1,66 @@
+```sh
+nest generate module films
+```
+
+```sh
+nest generate service films
+```
+
+```sh
+nest generate controller films
+```
+
+```sh
+npm i @nest/typeorm typeorm
+```
+
+```sh
+npm i pg
+```
+
+```sh
+npm i @nestjs/config
+```
+
+```json
+{
+  "typeorm": "typeorm-ts-node-esm --dataSource src/db/data-source-cli.ts"
+}
+```
+
+```sh
+npm run typeorm migration:generate src/db/data-source-cli.ts
+```
+
+
+```sh
+npm run typeorm migration:show
+```
+
+```sh
+npm run typeorm migration:run
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
