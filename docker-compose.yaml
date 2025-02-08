@@ -1,0 +1,53 @@
+services:
+  api:
+    container_name: films-wishlist-api
+    build:
+      context: .
+      target: development
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    depends_on:
+      - database
+    networks:
+      - films-wishlist
+
+  database:
+    container_name: films-wishlist-db
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - films-wishlist
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: films-wishlist-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "8081:80"
+    depends_on:
+      - database
+    networks:
+      - films-wishlist
+
+networks:
+  films-wishlist:
+    driver: bridge
+
+volumes:
+    pgdata:
