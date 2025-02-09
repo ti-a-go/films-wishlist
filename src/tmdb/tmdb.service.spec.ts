@@ -27,9 +27,16 @@ describe('TmdbService', () => {
       ]
     }).compile();
 
+    
     service = module.get<TmdbService>(TmdbService);
     httpService = module.get<HttpService>(HttpService);
     configService = module.get<ConfigService>(ConfigService);
+
+    const useLogger = configService.get<string>('NEST_APP_USE_APP')
+
+    if (useLogger === 'false') {
+      module.useLogger(false)
+    }
   });
 
   it('should be defined', () => {
