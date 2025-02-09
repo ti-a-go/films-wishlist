@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpStatus, Injectable } from '@nestjs/common';
-import { AxiosError, AxiosResponse } from 'axios';
-import { catchError, firstValueFrom, map, Observable } from 'rxjs';
+import { Injectable } from '@nestjs/common';
+import { AxiosError } from 'axios';
+import { catchError, firstValueFrom, of, retry, timer } from 'rxjs';
 import { Film, FilmData } from './film.interface';
 import { ConfigService } from '@nestjs/config';
 
@@ -32,22 +32,36 @@ export class TmdbService {
             this.httpService.get(url!, { params, headers }).pipe(
                 catchError((error: AxiosError) => {
                     if (error.response) {
+
                         console.log(error.response.data);
                         console.log(error.response.status);
                         console.log(error.response.headers);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log('Error', error.message);
-                    }
-                    console.log(error.config);
 
-                    throw 'An error happened when calling TMDB search film endpoint'
+                    } else if (error.request) {
+
+                        console.log(error.request);
+
+                    } else {
+
+                        console.log('Error', error.message);
+
+                    }
+
+                    console.log(error.config);
+                    return of({ data: undefined });
                 })
             )
         )
 
-        const { results } = data
+        if (data === undefined) {
+            throw new Error("An error happened during TMDB API call.")
+        }
+
+        let results = null
+        if (data.results) {
+
+            results = data.results
+        }
 
         if (results.length) {
             return {
