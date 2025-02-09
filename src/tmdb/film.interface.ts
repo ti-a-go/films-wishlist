@@ -7,6 +7,6 @@ export interface Film {
 
 export interface FilmData {
     title: string
-    language: string
-    year: string
+    language?: string
+    year?: string
 }
