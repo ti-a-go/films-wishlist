@@ -59,7 +59,7 @@ describe('FilmsService', () => {
     mockFilm.createdAt = faker.date.past().toString()
     mockFilm.updatedAt = faker.date.recent().toString()
 
-    repositoryMock.find?.mockReturnValue(mockFilm)
+    repositoryMock.find.mockReturnValue(mockFilm)
 
     // When
     const foundFilm = await service.findFilm(filmData)
