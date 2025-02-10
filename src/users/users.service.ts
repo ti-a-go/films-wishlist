@@ -48,10 +48,6 @@ export class UsersService {
       
       throw new InternalServerErrorException()
     }
-    
-
-    if (user === null)
-      throw new NotFoundException('User not found.');
 
     return user;
   }

@@ -116,21 +116,6 @@ describe('UsersService', () => {
       expect(async () => await service.findByName(username)).rejects.toThrow(InternalServerErrorException);
       expect(repositoryMock.findOne).toHaveBeenNthCalledWith(1, expectedFindOneParams);
     });
-
-    it('should throw when user is not found', async () => {
-      // Given
-      const username = faker.internet.username()
-
-      repositoryMock.findOne.mockReturnValue(null)
-
-      const expectedFindOneParams = {
-        where: { name: username },
-      }
-
-      // Then
-      expect(async () => await service.findByName(username)).rejects.toThrow(NotFoundException);
-      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(1, expectedFindOneParams);
-    });
     
     it('should find a user by name', async () => {
       // Given
