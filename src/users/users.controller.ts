@@ -13,11 +13,11 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Post()
-  createUser(
+  async createUser(
     @Body() { password, ...userData }: CreateUserDTO,
     @Body('password', HashPasswordPipe) hashedPassword: string,
   ) {
-    const createdUser = this.userService.createUser({
+    const createdUser = await this.userService.createUser({
       ...userData,
       password: hashedPassword,
     });

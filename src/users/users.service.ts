@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
@@ -13,15 +13,25 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>,
   ) { }
 
-  createUser(userData: CreateUserDTO): UserEntity {
+  async createUser(userData: CreateUserDTO): Promise<UserEntity> {
+    const user = await this.findByName(userData.name)
+
+    if (user) {
+      this.logger.log('Username already exists')
+      this.logger.log(`USERNAME - ${userData.name}`)
+
+      throw new ConflictException('Username already exists')
+    }
+
     const userEntity = new UserEntity();
 
     Object.assign(userEntity, userData as UserEntity);
 
-    let createdUser;
+    let createdUser: UserEntity;
 
     try {
-      createdUser = this.userRepository.create(userEntity);
+      createdUser = await this.userRepository.save(userEntity);
+
     } catch (error) {
       this.logger.error('ERROR - Failed to create user in the database.')
       this.logger.error(`ERROR - ${JSON.stringify(error)}`)

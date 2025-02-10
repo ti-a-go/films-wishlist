@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker/.';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/CreateUser.dto';
@@ -14,7 +14,7 @@ export type MockType<T> = {
 };
 
 export const repositoryMockFactory: () => MockType<Repository<UserEntity>> = jest.fn(() => ({
-  create: jest.fn(entity => entity),
+  save: jest.fn(entity => entity),
   findOne: jest.fn(entity => entity),
 }));
 
@@ -61,17 +61,20 @@ describe('UsersService', () => {
       userData.name = faker.internet.username()
       userData.password = faker.internet.password()
 
-      repositoryMock.create.mockImplementation(() => {
-        throw new InternalServerErrorException()
-      })
+      repositoryMock.findOne.mockImplementation(() => Promise.resolve(null))
+      repositoryMock.save.mockImplementation(() => Promise.reject(new Error()))
 
       const userToBeCreated = new UserEntity()
       userToBeCreated.name = userData.name
       userToBeCreated.password = userData.password
 
+      const expecteFindOneParams = {
+        where: { name: userData.name },
+      }
+
       // Then
-      expect(() => service.createUser(userData)).toThrow(InternalServerErrorException);
-      expect(repositoryMock.create).toHaveBeenNthCalledWith(1, userToBeCreated);
+      expect(async () => await service.createUser(userData)).rejects.toThrow(InternalServerErrorException);
+      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(1, expecteFindOneParams);
     });
     
     it('should create a new user', async () => {
@@ -86,18 +89,24 @@ describe('UsersService', () => {
       mockUser.createdAt = faker.date.past().toDateString()
       mockUser.updatedAt = mockUser.createdAt
 
-      repositoryMock.create.mockReturnValue(mockUser)
+      repositoryMock.findOne.mockImplementation(async () => Promise.resolve(null))
+      repositoryMock.save.mockImplementation(async () => Promise.resolve(mockUser))
 
       const userToBeCreated = new UserEntity()
       userToBeCreated.name = userData.name
       userToBeCreated.password = userData.password
 
+      const expecteFindOneParams = {
+        where: { name: userData.name },
+      }
+
       // When
-      const createdUser = service.createUser(userData)
+      const createdUser = await service.createUser(userData)
 
       // Then
       expect(createdUser).toEqual(mockUser);
-      expect(repositoryMock.create).toHaveBeenNthCalledWith(1, userToBeCreated);
+      expect(repositoryMock.save).toHaveBeenNthCalledWith(1, userToBeCreated);
+      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(1, expecteFindOneParams);
     });
   })
 

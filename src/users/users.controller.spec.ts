@@ -21,7 +21,7 @@ describe('UsersController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should create a new user', () => {
+  it('should create a new user', async () => {
     // Given
     const createUserDTO = new CreateUserDTO()
     createUserDTO.name = faker.internet.username()
@@ -38,7 +38,7 @@ describe('UsersController', () => {
 
     const expectedCreatedUser = new CreatedUserDTO(mockCreatedUser.id, mockCreatedUser.name)
 
-    usersService.createUser.mockReturnValue(mockCreatedUser)
+    usersService.createUser.mockResolvedValue(mockCreatedUser)
 
     const expectedCreateUserParams = {
       ...createUserDTO,
@@ -46,7 +46,7 @@ describe('UsersController', () => {
     }
 
     // When
-    const createdUser = controller.createUser(createUserDTO, hashedPassword)
+    const createdUser = await controller.createUser(createUserDTO, hashedPassword)
 
     // Then
     expect(createdUser).toEqual(expectedCreatedUser);
