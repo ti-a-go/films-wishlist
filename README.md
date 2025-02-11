@@ -11,9 +11,9 @@ Start docker services:
 docker compose up
 ```
 
-Run migrations:
+## Run migrations:
 
-Due to this issue, TypeORM only runs with Node version 18.18.0.
+Due to [this issue](https://github.com/typeorm/typeorm/issues/10537), TypeORM only runs with Node version 18.18.0.
 
 To run the migrations user the `.tool-versions` file to set the correct node version.
 
