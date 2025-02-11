@@ -12,17 +12,21 @@ export class FilmsService {
     ) { }
 
     async findFilm(filmData: FilmQuery) {
-        const foundFilm = await this.filmRepository.find({
+
+        const foundFilm = await this.filmRepository.findOne({
             where: {
-                title: filmData.title,
+                title: filmData.title.toUpperCase(),
                 year: filmData.year,
                 language: filmData.language
             }
         });
+        
         return foundFilm;
     }
 
     async createFilm(film: Film) {
+        film.title = film.title.toUpperCase()
+
         return await this.filmRepository.save(film)
     }
 }

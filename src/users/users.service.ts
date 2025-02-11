@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/CreateUser.dto';
+import { FilmEntity } from '../films/film.entity';
+import { WishlistEntity } from '../wishlist/wishlist.entity';
+import { WishEntity } from '../wishlist/wish.entity';
 
 @Injectable()
 export class UsersService {
@@ -46,7 +49,7 @@ export class UsersService {
     let user: UserEntity;
 
     try {
-      
+
       user = await this.userRepository.findOne({
         where: { name },
       });
@@ -55,10 +58,57 @@ export class UsersService {
 
       this.logger.error('Error while trying to find user on the database')
       this.logger.error(`ERROR - ${JSON.stringify(error)}`)
-      
+
       throw new InternalServerErrorException()
     }
 
     return user;
+  }
+
+  async findUserWithWishlist(userId) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId
+      },
+      relations: {
+        wishlist: {
+          wishes: {
+            film: true
+          }
+        }
+      }
+    })
+    
+    return user
+  }
+
+  async addFilmToUserWishlist(film: FilmEntity, userId: string) {
+    let user = await this.findUserWithWishlist(userId)
+
+    if (!user.wishlist) {
+      user.wishlist = new WishlistEntity()
+      user.wishlist.wishes = []
+    }
+
+    if (user.wishlist.wishes?.length > 0) {
+      const existentWish = user.wishlist.wishes.find((wish) => {
+        if (wish.film.title === film.title) {
+          return true
+        }
+      })
+
+      if (existentWish) {
+        return user
+      }
+    }
+
+    const wish = new WishEntity()
+    wish.film = film
+
+    user.wishlist.wishes.push(wish)
+
+    const savedUser = await this.userRepository.save(user)
+
+    return savedUser
   }
 }

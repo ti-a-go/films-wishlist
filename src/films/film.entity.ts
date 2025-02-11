@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { WishEntity } from '../wishlist/wish.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 
 @Entity({ name: 'films' })
@@ -18,16 +19,14 @@ export class FilmEntity {
     @Column({ name: 'synopse', length: 511 })
     synopse: string;
 
-    @Column({ name: 'status', default: 'À assistir'})
-    status: string
+    @OneToMany(() => WishEntity, (wish) => wish.wishlist)
+    wishes: WishEntity[];
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: string;
 
-
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: string;
-
 
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt: string;

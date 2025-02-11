@@ -11,7 +11,7 @@ export type MockType<T> = {
 };
 
 export const repositoryMockFactory: () => MockType<Repository<FilmEntity>> = jest.fn(() => ({
-  find: jest.fn(entity => entity),
+  findOne: jest.fn(entity => entity),
 }));
 
 describe('FilmsService', () => {
@@ -44,7 +44,7 @@ describe('FilmsService', () => {
 
     const query = {
       where: {
-        title: filmData.title,
+        title: filmData.title.toUpperCase(),
         year: filmData.year,
         language: filmData.language
       }
@@ -59,7 +59,7 @@ describe('FilmsService', () => {
     mockFilm.createdAt = faker.date.past().toString()
     mockFilm.updatedAt = faker.date.recent().toString()
 
-    repositoryMock.find.mockReturnValue(mockFilm)
+    repositoryMock.findOne.mockReturnValue(mockFilm)
 
     // When
     const foundFilm = await service.findFilm(filmData)
@@ -67,6 +67,6 @@ describe('FilmsService', () => {
     // Then
     expect(foundFilm).toBeInstanceOf(FilmEntity);
     expect(foundFilm).toEqual(mockFilm)
-    expect(repositoryMock.find).toHaveBeenNthCalledWith(1, query);
+    expect(repositoryMock.findOne).toHaveBeenNthCalledWith(1, query);
   });
 });
