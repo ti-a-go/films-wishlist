@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { FilmsService } from './films.service';
 import { TmdbService } from '../tmdb/tmdb.service';
 import { Film } from './film.interface';
@@ -39,5 +39,14 @@ export class FilmsController {
         user = await this.usersService.addFilmToUserWishlist(createdFilm, req.user.sub)
 
         return user
+    }
+
+    @UseGuards(AuthenticationGuard)
+    @Put(':id/status')
+    async updateStatus(
+        @Param('id') filmId: string, 
+        @Req() req: RequestWithUser
+    ) {
+        return this.usersService.updateWishStatus(req.user.sub, filmId)
     }
 }

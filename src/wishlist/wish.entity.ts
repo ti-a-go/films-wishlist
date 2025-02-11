@@ -10,6 +10,7 @@ export enum Status {
     RECOMMANDED = 'Recomendado'
 }
 
+
 @Entity({ name: 'wishes' })
 export class WishEntity {
     @PrimaryGeneratedColumn('uuid')
@@ -39,4 +40,10 @@ export class WishEntity {
 
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt: string;
+
+    updateStatus() {
+        if (this.status === Status.TO_WATCH) {
+            this.status = Status.WATCHED
+        }
+    }
 }

@@ -1,11 +1,11 @@
-import { ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { FilmEntity } from '../films/film.entity';
 import { WishlistEntity } from '../wishlist/wishlist.entity';
-import { WishEntity } from '../wishlist/wish.entity';
+import { Status, WishEntity } from '../wishlist/wish.entity';
 
 @Injectable()
 export class UsersService {
@@ -78,7 +78,7 @@ export class UsersService {
         }
       }
     })
-    
+
     return user
   }
 
@@ -110,5 +110,66 @@ export class UsersService {
     const savedUser = await this.userRepository.save(user)
 
     return savedUser
+  }
+
+  async updateWishStatus(userId: string, filmId: string) {
+    const user = await this.findUserWithWishlist(userId)
+
+    if (!user) {
+      this.logger.log("User not found.")
+
+      return new NotFoundException('User not found.')
+    }
+
+    if (!user.wishlist) {
+      this.logger.log("No wisheslist found in the user.")
+
+      throw new NotFoundException('Film not found.')
+    }
+
+    if (!user.wishlist.wishes) {
+      this.logger.log("No whishes found in the user.")
+
+      throw new NotFoundException('Film not found.')
+    }
+
+    if (user.wishlist.wishes.length < 1) {
+      this.logger.log("Whishes list has no wish.")
+
+      throw new NotFoundException('Film not found.')
+    }
+
+    const foundWish = user.wishlist.wishes.find((wish) => {
+      if (wish.film.id === filmId) {
+        return true;
+      }
+    })
+
+    if (!foundWish) {
+      this.logger.log("No wishes found in the user.")
+
+      throw new NotFoundException('Film not found.')
+    }
+
+    if (foundWish.status === Status.WATCHED) {
+      throw new BadRequestException('Film alread watched. To rate the film user PUT /rate endpoint.')
+    }
+
+    if (foundWish.status === Status.RATED) {
+      throw new BadRequestException('Film alread rated. To recommend the film user PUT /recommend endpoint.')
+    }
+
+    foundWish.updateStatus()
+
+    user.wishlist.wishes = user.wishlist.wishes.map((wish) => {
+      if (wish.id === foundWish.id) {
+        return foundWish;
+      }
+      return wish;
+    })
+
+    this.userRepository.save(user)
+
+    return user
   }
 }
