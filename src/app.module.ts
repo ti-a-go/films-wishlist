@@ -8,6 +8,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger/global-logger.interceptor';
+import { LogsModule } from './logs/logs.module';
+import { LogEntity } from './logs/log.entity';
 
 @Module({
   imports: [
@@ -24,12 +27,18 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       inject: [PostgresConfigService],
     }),
     WishlistModule,
+    LogsModule,
+    TypeOrmModule.forFeature([LogEntity])
   ],
   controllers: [],
   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: GlobalLoggerInterceptor,
     }
   ],
 })
