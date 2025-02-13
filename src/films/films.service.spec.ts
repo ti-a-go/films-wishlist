@@ -9,7 +9,6 @@ import { UsersService } from '../users/users.service';
 import { TmdbService } from '../tmdb/tmdb.service';
 import { FilmsRepository } from './films.repository';
 
-
 describe('FilmsService', () => {
   let service: FilmsService;
 
