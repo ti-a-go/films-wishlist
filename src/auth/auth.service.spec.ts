@@ -1,22 +1,22 @@
 import { faker } from '@faker-js/faker/.';
 import { AuthService } from './auth.service';
 import { Mocked, TestBed } from '@suites/unit';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../users/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UsersRepository } from '../users/users.repository';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let usersService: Mocked<UsersService>;
+  let usersRepository: Mocked<UsersRepository>;
   let jwtService: Mocked<JwtService>;
 
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
 
     service = unit;
-    usersService = unitRef.get(UsersService);
+    usersRepository = unitRef.get(UsersRepository);
     jwtService = unitRef.get(JwtService);
   });
 
@@ -30,13 +30,13 @@ describe('AuthService', () => {
       const username = faker.internet.username();
       const password = faker.internet.password();
 
-      usersService.findByName.mockReturnValue(null);
+      usersRepository.findByName.mockReturnValue(null);
 
       // Then
       expect(
         async () => await service.login(username, password),
       ).rejects.toThrow(UnauthorizedException);
-      expect(usersService.findByName).toHaveBeenNthCalledWith(1, username);
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(1, username);
     });
 
     it('should throw authentication exception when username password is not correct', async () => {
@@ -52,13 +52,13 @@ describe('AuthService', () => {
       user.password = hashedPassword;
       user.name = username;
 
-      usersService.findByName.mockResolvedValue(user);
+      usersRepository.findByName.mockResolvedValue(user);
 
       // Then
       expect(
         async () => await service.login(username, wrongPassword),
       ).rejects.toThrow(UnauthorizedException);
-      expect(usersService.findByName).toHaveBeenNthCalledWith(1, username);
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(1, username);
     });
 
     it('should return JWT token', async () => {
@@ -80,7 +80,7 @@ describe('AuthService', () => {
         access_token: expectedToken,
       };
 
-      usersService.findByName.mockResolvedValue(user);
+      usersRepository.findByName.mockResolvedValue(user);
       jwtService.signAsync.mockResolvedValue(expectedToken);
 
       // When

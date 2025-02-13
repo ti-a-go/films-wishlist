@@ -1,5 +1,14 @@
-# Films wishlist
+# Backlog
 
+## Make case insensitive query to find film by name
+
+https://github.com/typeorm/typeorm/issues/1231
+
+
+
+
+
+# Films wishlist
 
 # How to run
 

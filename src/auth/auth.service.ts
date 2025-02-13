@@ -1,12 +1,7 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UsersRepository } from '../users/users.repository';
 
 export interface UserPayload {
   sub: string;
@@ -15,15 +10,15 @@ export interface UserPayload {
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(UsersService.name);
+  private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private userService: UsersService,
+    private userRepository: UsersRepository,
     private jwtService: JwtService,
   ) {}
 
   async login(username: string, password: string) {
-    const user = await this.userService.findByName(username);
+    const user = await this.userRepository.findByName(username);
 
     if (user === null) {
       this.logger.log('User not found for authentication');

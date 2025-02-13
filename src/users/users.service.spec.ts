@@ -1,55 +1,21 @@
-import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker/.';
-import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { InternalServerErrorException } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { UserEntity } from './user.entity';
-
-export type MockType<T> = {
-  [P in keyof T]?: jest.Mock<{}>;
-};
-
-export const repositoryMockFactory: () => MockType<Repository<UserEntity>> =
-  jest.fn(() => ({
-    save: jest.fn((entity) => entity),
-    findOne: jest.fn((entity) => entity),
-  }));
+import { Mocked, TestBed } from '@suites/unit';
+import { UsersRepository } from './users.repository';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let configService: ConfigService;
-  let repositoryMock: MockType<Repository<UserEntity>>;
+  let usersRepository: Mocked<UsersRepository>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UsersService,
-        {
-          provide: getRepositoryToken(UserEntity),
-          useFactory: repositoryMockFactory,
-        },
-      ],
-      imports: [
-        ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: '.env',
-        }),
-      ],
-    }).compile();
+    const { unit, unitRef } = await TestBed.solitary(UsersService).compile();
 
-    service = module.get<UsersService>(UsersService);
-    configService = module.get<ConfigService>(ConfigService);
-    repositoryMock = module.get(getRepositoryToken(UserEntity));
-
-    const useLogger = configService.get<string>('NEST_APP_USE_APP');
-
-    if (useLogger === 'false') {
-      module.useLogger(false);
-    }
+    service = unit;
+    usersRepository = unitRef.get<UsersRepository>(UsersRepository);
   });
 
   it('should be defined', () => {
@@ -63,22 +29,24 @@ describe('UsersService', () => {
       userData.name = faker.internet.username();
       userData.password = faker.internet.password();
 
-      repositoryMock.findOne.mockImplementation(() => Promise.resolve(null));
-      repositoryMock.save.mockImplementation(() => Promise.reject(new Error()));
+      usersRepository.findByName.mockImplementation(() =>
+        Promise.resolve(null),
+      );
+      usersRepository.save.mockImplementation(() =>
+        Promise.reject(new InternalServerErrorException()),
+      );
 
       const userToBeCreated = new UserEntity();
       userToBeCreated.name = userData.name;
       userToBeCreated.password = userData.password;
 
-      const expecteFindOneParams = {
-        where: { name: userData.name },
-      };
+      const expecteFindOneParams = userData.name;
 
       // Then
       expect(async () => await service.createUser(userData)).rejects.toThrow(
         InternalServerErrorException,
       );
-      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(
         1,
         expecteFindOneParams,
       );
@@ -96,10 +64,10 @@ describe('UsersService', () => {
       mockUser.createdAt = faker.date.past().toDateString();
       mockUser.updatedAt = mockUser.createdAt;
 
-      repositoryMock.findOne.mockImplementation(async () =>
+      usersRepository.findByName.mockImplementation(async () =>
         Promise.resolve(null),
       );
-      repositoryMock.save.mockImplementation(async () =>
+      usersRepository.save.mockImplementation(async () =>
         Promise.resolve(mockUser),
       );
 
@@ -107,67 +75,17 @@ describe('UsersService', () => {
       userToBeCreated.name = userData.name;
       userToBeCreated.password = userData.password;
 
-      const expecteFindOneParams = {
-        where: { name: userData.name },
-      };
+      const expecteFindOneParams = userData.name;
 
       // When
       const createdUser = await service.createUser(userData);
 
       // Then
       expect(createdUser).toEqual(mockUser);
-      expect(repositoryMock.save).toHaveBeenNthCalledWith(1, userToBeCreated);
-      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(
+      expect(usersRepository.save).toHaveBeenNthCalledWith(1, userToBeCreated);
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(
         1,
         expecteFindOneParams,
-      );
-    });
-  });
-
-  describe('findByName', () => {
-    it('should throw user repository throws', async () => {
-      // Given
-      const username = faker.internet.username();
-
-      repositoryMock.findOne.mockImplementation(() =>
-        Promise.reject(new Error()),
-      );
-
-      const expectedFindOneParams = {
-        where: { name: username },
-      };
-
-      // Then
-      expect(async () => await service.findByName(username)).rejects.toThrow(
-        InternalServerErrorException,
-      );
-      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(
-        1,
-        expectedFindOneParams,
-      );
-    });
-
-    it('should find a user by name', async () => {
-      // Given
-      const username = faker.internet.username();
-
-      const foundUser = new UserEntity();
-      foundUser.name = username;
-
-      repositoryMock.findOne.mockReturnValue(foundUser);
-
-      const expectedFindOneParams = {
-        where: { name: username },
-      };
-
-      // When
-      const user = await service.findByName(username);
-
-      // Then
-      expect(user).toEqual(foundUser);
-      expect(repositoryMock.findOne).toHaveBeenNthCalledWith(
-        1,
-        expectedFindOneParams,
       );
     });
   });

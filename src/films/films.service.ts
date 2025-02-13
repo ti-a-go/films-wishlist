@@ -1,7 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FilmEntity } from './film.entity';
-import { Repository } from 'typeorm';
 import { Film, FilmQuery } from './film.interface';
 import { CreateFilmeDTO } from './dto/CreateFilme.dto';
 import { UserEntity } from '../users/user.entity';

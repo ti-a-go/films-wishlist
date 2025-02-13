@@ -2,29 +2,24 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
-import { Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { FilmEntity } from '../films/film.entity';
 import { WishlistEntity } from '../wishlist/wishlist.entity';
 import { Status, WishEntity } from '../wishlist/wish.entity';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(userData: CreateUserDTO): Promise<UserEntity> {
-    const user = await this.findByName(userData.name);
+    const user = await this.usersRepository.findByName(userData.name);
 
     if (user) {
       this.logger.log('Username already exists');
@@ -37,56 +32,11 @@ export class UsersService {
 
     Object.assign(userEntity, userData as UserEntity);
 
-    let createdUser: UserEntity;
-
-    try {
-      createdUser = await this.userRepository.save(userEntity);
-    } catch (error) {
-      this.logger.error('ERROR - Failed to create user in the database.');
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
-
-      throw new InternalServerErrorException();
-    }
-
-    return createdUser;
-  }
-
-  async findByName(name: string) {
-    let user: UserEntity;
-
-    try {
-      user = await this.userRepository.findOne({
-        where: { name },
-      });
-    } catch (error) {
-      this.logger.error('Error while trying to find user on the database');
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
-
-      throw new InternalServerErrorException();
-    }
-
-    return user;
-  }
-
-  async findUserWithWishlist(userId) {
-    const user = await this.userRepository.findOne({
-      where: {
-        id: userId,
-      },
-      relations: {
-        wishlist: {
-          wishes: {
-            film: true,
-          },
-        },
-      },
-    });
-
-    return user;
+    return await this.usersRepository.save(userEntity);
   }
 
   async addFilmToUserWishlist(film: FilmEntity, userId: string) {
-    let user = await this.findUserWithWishlist(userId);
+    let user = await this.usersRepository.findUserWithWishlist(userId);
 
     if (!user.wishlist) {
       user.wishlist = new WishlistEntity();
@@ -110,13 +60,11 @@ export class UsersService {
 
     user.wishlist.wishes.push(wish);
 
-    const savedUser = await this.userRepository.save(user);
-
-    return savedUser;
+    return await this.usersRepository.save(user);
   }
 
   async updateWishStatus(userId: string, filmId: string) {
-    const user = await this.findUserWithWishlist(userId);
+    const user = await this.usersRepository.findUserWithWishlist(userId);
 
     if (!user) {
       this.logger.log('User not found.');
@@ -175,8 +123,6 @@ export class UsersService {
       return wish;
     });
 
-    this.userRepository.save(user);
-
-    return user;
+    return this.usersRepository.save(user);
   }
 }

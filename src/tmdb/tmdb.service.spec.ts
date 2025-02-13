@@ -30,7 +30,7 @@ describe('TmdbService', () => {
     httpService = module.get<HttpService>(HttpService);
     configService = module.get<ConfigService>(ConfigService);
 
-    const useLogger = configService.get<string>('NEST_APP_USE_APP');
+    const useLogger = configService.get<string>('USE_TESTING_LOGGER');
 
     if (useLogger === 'false') {
       module.useLogger(false);
