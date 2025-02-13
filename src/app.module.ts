@@ -28,7 +28,7 @@ import { LogEntity } from './logs/log.entity';
     }),
     WishlistModule,
     LogsModule,
-    TypeOrmModule.forFeature([LogEntity])
+    TypeOrmModule.forFeature([LogEntity]),
   ],
   controllers: [],
   providers: [
@@ -39,7 +39,7 @@ import { LogEntity } from './logs/log.entity';
     {
       provide: APP_INTERCEPTOR,
       useClass: GlobalLoggerInterceptor,
-    }
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}

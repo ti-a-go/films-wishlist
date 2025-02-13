@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateFilmeDTO {
-    @IsNotEmpty()
-    title: string
-    
-    @IsOptional()
-    year: string
+  @IsNotEmpty()
+  title: string;
 
-    @IsOptional()
-    language: string
+  @IsOptional()
+  year: string;
+
+  @IsOptional()
+  language: string;
 }

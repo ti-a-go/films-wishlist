@@ -1,4 +1,11 @@
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
@@ -14,16 +21,16 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async createUser(userData: CreateUserDTO): Promise<UserEntity> {
-    const user = await this.findByName(userData.name)
+    const user = await this.findByName(userData.name);
 
     if (user) {
-      this.logger.log('Username already exists')
-      this.logger.log(`USERNAME - ${userData.name}`)
+      this.logger.log('Username already exists');
+      this.logger.log(`USERNAME - ${userData.name}`);
 
-      throw new ConflictException('Username already exists')
+      throw new ConflictException('Username already exists');
     }
 
     const userEntity = new UserEntity();
@@ -34,32 +41,28 @@ export class UsersService {
 
     try {
       createdUser = await this.userRepository.save(userEntity);
-
     } catch (error) {
-      this.logger.error('ERROR - Failed to create user in the database.')
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`)
+      this.logger.error('ERROR - Failed to create user in the database.');
+      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
 
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException();
     }
 
-    return createdUser
+    return createdUser;
   }
 
   async findByName(name: string) {
     let user: UserEntity;
 
     try {
-
       user = await this.userRepository.findOne({
         where: { name },
       });
-
     } catch (error) {
+      this.logger.error('Error while trying to find user on the database');
+      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
 
-      this.logger.error('Error while trying to find user on the database')
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`)
-
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException();
     }
 
     return user;
@@ -68,108 +71,112 @@ export class UsersService {
   async findUserWithWishlist(userId) {
     const user = await this.userRepository.findOne({
       where: {
-        id: userId
+        id: userId,
       },
       relations: {
         wishlist: {
           wishes: {
-            film: true
-          }
-        }
-      }
-    })
+            film: true,
+          },
+        },
+      },
+    });
 
-    return user
+    return user;
   }
 
   async addFilmToUserWishlist(film: FilmEntity, userId: string) {
-    let user = await this.findUserWithWishlist(userId)
+    let user = await this.findUserWithWishlist(userId);
 
     if (!user.wishlist) {
-      user.wishlist = new WishlistEntity()
-      user.wishlist.wishes = []
+      user.wishlist = new WishlistEntity();
+      user.wishlist.wishes = [];
     }
 
     if (user.wishlist.wishes?.length > 0) {
       const existentWish = user.wishlist.wishes.find((wish) => {
         if (wish.film.title === film.title) {
-          return true
+          return true;
         }
-      })
+      });
 
       if (existentWish) {
-        return user
+        return user;
       }
     }
 
-    const wish = new WishEntity()
-    wish.film = film
+    const wish = new WishEntity();
+    wish.film = film;
 
-    user.wishlist.wishes.push(wish)
+    user.wishlist.wishes.push(wish);
 
-    const savedUser = await this.userRepository.save(user)
+    const savedUser = await this.userRepository.save(user);
 
-    return savedUser
+    return savedUser;
   }
 
   async updateWishStatus(userId: string, filmId: string) {
-    const user = await this.findUserWithWishlist(userId)
+    const user = await this.findUserWithWishlist(userId);
 
     if (!user) {
-      this.logger.log("User not found.")
+      this.logger.log('User not found.');
 
-      return new NotFoundException('User not found.')
+      return new NotFoundException('User not found.');
     }
 
     if (!user.wishlist) {
-      this.logger.log("No wisheslist found in the user.")
+      this.logger.log('No wisheslist found in the user.');
 
-      throw new NotFoundException('Film not found.')
+      throw new NotFoundException('Film not found.');
     }
 
     if (!user.wishlist.wishes) {
-      this.logger.log("No whishes found in the user.")
+      this.logger.log('No whishes found in the user.');
 
-      throw new NotFoundException('Film not found.')
+      throw new NotFoundException('Film not found.');
     }
 
     if (user.wishlist.wishes.length < 1) {
-      this.logger.log("Whishes list has no wish.")
+      this.logger.log('Whishes list has no wish.');
 
-      throw new NotFoundException('Film not found.')
+      throw new NotFoundException('Film not found.');
     }
 
     const foundWish = user.wishlist.wishes.find((wish) => {
       if (wish.film.id === filmId) {
         return true;
       }
-    })
+    });
 
     if (!foundWish) {
-      this.logger.log("No wishes found in the user.")
+      this.logger.log('No wishes found in the user.');
 
-      throw new NotFoundException('Film not found.')
+      throw new NotFoundException('Film not found.');
     }
 
     if (foundWish.status === Status.WATCHED) {
-      throw new BadRequestException('Film alread watched. To rate the film user PUT /rate endpoint.')
+      throw new BadRequestException(
+        'Film alread watched. To rate the film user PUT /rate endpoint.',
+      );
     }
 
     if (foundWish.status === Status.RATED) {
-      throw new BadRequestException('Film alread rated. To recommend the film user PUT /recommend endpoint.')
+      throw new BadRequestException(
+        'Film alread rated. To recommend the film user PUT /recommend endpoint.',
+      );
     }
 
-    foundWish.updateStatus()
+    foundWish.updateStatus();
 
     user.wishlist.wishes = user.wishlist.wishes.map((wish) => {
       if (wish.id === foundWish.id) {
         return foundWish;
       }
       return wish;
-    })
+    });
 
-    this.userRepository.save(user)
+    this.userRepository.save(user);
 
-    return user
+    return user;
   }
 }

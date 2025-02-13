@@ -16,7 +16,7 @@ CMD ["npm", "run", "start:dev"]
 
 FROM base AS test
 
-CMD ["npm", "run", "test"]
+CMD ["npm", "run", "test:e2e"]
 
 FROM base AS build
 

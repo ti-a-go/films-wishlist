@@ -6,10 +6,10 @@ import { HttpModule } from '@nestjs/axios';
   imports: [
     HttpModule.register({
       timeout: 5000,
-      maxRedirects: 5
-    })
+      maxRedirects: 5,
+    }),
   ],
   providers: [TmdbService],
-  exports: [TmdbService]
+  exports: [TmdbService],
 })
 export class TmdbModule {}

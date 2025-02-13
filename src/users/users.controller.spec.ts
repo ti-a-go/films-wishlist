@@ -23,33 +23,42 @@ describe('UsersController', () => {
 
   it('should create a new user', async () => {
     // Given
-    const createUserDTO = new CreateUserDTO()
-    createUserDTO.name = faker.internet.username()
-    createUserDTO.password = faker.internet.password()
+    const createUserDTO = new CreateUserDTO();
+    createUserDTO.name = faker.internet.username();
+    createUserDTO.password = faker.internet.password();
 
-    const hashedPassword = faker.number.bigInt().toString()
+    const hashedPassword = faker.number.bigInt().toString();
 
-    const mockCreatedUser = new UserEntity()
-    mockCreatedUser.id = faker.string.uuid()
-    mockCreatedUser.name = createUserDTO.name
-    mockCreatedUser.password = hashedPassword
-    mockCreatedUser.createdAt = faker.date.recent().toDateString()
-    mockCreatedUser.updatedAt = mockCreatedUser.createdAt
+    const mockCreatedUser = new UserEntity();
+    mockCreatedUser.id = faker.string.uuid();
+    mockCreatedUser.name = createUserDTO.name;
+    mockCreatedUser.password = hashedPassword;
+    mockCreatedUser.createdAt = faker.date.recent().toDateString();
+    mockCreatedUser.updatedAt = mockCreatedUser.createdAt;
 
-    const expectedCreatedUser = new CreatedUserDTO(mockCreatedUser.id, mockCreatedUser.name)
+    const expectedCreatedUser = new CreatedUserDTO(
+      mockCreatedUser.id,
+      mockCreatedUser.name,
+    );
 
-    usersService.createUser.mockResolvedValue(mockCreatedUser)
+    usersService.createUser.mockResolvedValue(mockCreatedUser);
 
     const expectedCreateUserParams = {
       ...createUserDTO,
-      password: hashedPassword
-    }
+      password: hashedPassword,
+    };
 
     // When
-    const createdUser = await controller.createUser(createUserDTO, hashedPassword)
+    const createdUser = await controller.createUser(
+      createUserDTO,
+      hashedPassword,
+    );
 
     // Then
     expect(createdUser).toEqual(expectedCreatedUser);
-    expect(usersService.createUser).toHaveBeenNthCalledWith(1, expectedCreateUserParams)
+    expect(usersService.createUser).toHaveBeenNthCalledWith(
+      1,
+      expectedCreateUserParams,
+    );
   });
 });

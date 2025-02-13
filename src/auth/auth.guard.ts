@@ -20,15 +20,13 @@ export class AuthenticationGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   async canActivate(contexto: ExecutionContext): Promise<boolean> {
-    const request = contexto
-      .switchToHttp()
-      .getRequest<RequestWithUser>();
-      
+    const request = contexto.switchToHttp().getRequest<RequestWithUser>();
+
     const token = this.extractToken(request);
 
     if (!token) {
-      this.logger.log('Authentication failed')
-      this.logger.log(`ERROR - ${JSON.stringify(request.headers)}`)
+      this.logger.log('Authentication failed');
+      this.logger.log(`ERROR - ${JSON.stringify(request.headers)}`);
 
       throw new UnauthorizedException('Authentication failed');
     }
@@ -36,10 +34,9 @@ export class AuthenticationGuard implements CanActivate {
     try {
       const payload: UserPayload = await this.jwtService.verifyAsync(token);
       request.user = payload;
-
     } catch (error) {
-      this.logger.error('Authentication error')
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`)
+      this.logger.error('Authentication error');
+      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
 
       throw new UnauthorizedException('Invalid Token');
     }

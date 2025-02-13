@@ -14,6 +14,8 @@ services:
       - database
     networks:
       - films-wishlist
+    profiles:
+      - app
 
   database:
     container_name: films-wishlist-db
@@ -31,6 +33,45 @@ services:
     networks:
       - films-wishlist
     restart: unless-stopped
+    profiles:
+      - app
+  
+  test-api:
+    container_name: test-films-wishlist-api
+    build:
+      context: .
+      target: test
+    env_file:
+      - .test.env
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
+    depends_on:
+      - test-database
+    networks:
+      - test-films-wishlist
+    profiles:
+      - e2e-test
+
+  test-database:
+    container_name: test-films-wishlist-db
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - testpgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - test-films-wishlist
+    restart: unless-stopped
+    profiles:
+      - e2e-test
 
   pgadmin:
     container_name: films-wishlist-pgadmin
@@ -44,10 +85,15 @@ services:
       - database
     networks:
       - films-wishlist
+    profiles:
+      - debug
 
 networks:
   films-wishlist:
     driver: bridge
+  test-films-wishlist:
+    driver: bridge
 
 volumes:
     pgdata:
+    testpgdata:

@@ -1,4 +1,9 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable, tap } from 'rxjs';
 import { RequestWithUser } from '../../../auth/auth.guard';
@@ -7,38 +12,41 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class GlobalLoggerInterceptor implements NestInterceptor {
-  constructor(@InjectRepository(LogEntity) private readonly userLogRepository: Repository<LogEntity>) {}
+  constructor(
+    @InjectRepository(LogEntity)
+    private readonly userLogRepository: Repository<LogEntity>,
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const httpContext = context.switchToHttp();
-    const log = {}
+    const log = {};
 
-    const request = httpContext.getRequest<
-      Request | RequestWithUser
-    >();
+    const request = httpContext.getRequest<Request | RequestWithUser>();
     const { method, url } = request;
-    log['method'] = method
-    log['url'] = url
-    
-    const timestamp = Date.now()
-    log['timestamp'] = timestamp
+    log['method'] = method;
+    log['url'] = url;
 
-    return next.handle().pipe(map(data => {
-      if (data?.wishlist?.wishes?.length > 0) {
-        const filmIds = data.wishlist.wishes.map((wish) => {
-          if (wish.film) {
-            return wish.film.id
-          }
-        })
-        log['filmIds'] = filmIds
-      }
+    const timestamp = Date.now();
+    log['timestamp'] = timestamp;
 
-      log['status'] = context.switchToHttp().getResponse().statusCode
+    return next.handle().pipe(
+      map((data) => {
+        if (data?.wishlist?.wishes?.length > 0) {
+          const filmIds = data.wishlist.wishes.map((wish) => {
+            if (wish.film) {
+              return wish.film.id;
+            }
+          });
+          log['filmIds'] = filmIds;
+        }
 
-      this.userLogRepository.save(log)
-      console.log(JSON.stringify(log))
+        log['status'] = context.switchToHttp().getResponse().statusCode;
 
-      return { data }
-    }));
+        this.userLogRepository.save(log);
+        console.log(JSON.stringify(log));
+
+        return { data };
+      }),
+    );
   }
 }

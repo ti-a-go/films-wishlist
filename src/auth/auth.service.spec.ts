@@ -7,85 +7,87 @@ import { UserEntity } from '../users/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-
 describe('AuthService', () => {
   let service: AuthService;
   let usersService: Mocked<UsersService>;
-  let jwtService: Mocked<JwtService>
+  let jwtService: Mocked<JwtService>;
 
   beforeEach(async () => {
-      const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
-  
-      service = unit;
-      usersService = unitRef.get(UsersService);
-      jwtService = unitRef.get(JwtService);
-    });
+    const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
+
+    service = unit;
+    usersService = unitRef.get(UsersService);
+    jwtService = unitRef.get(JwtService);
+  });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe("login", () => {
+  describe('login', () => {
     it('should throw authentication exception when user is not found', async () => {
       // Given
-      const username = faker.internet.username()
-      const password = faker.internet.password()
+      const username = faker.internet.username();
+      const password = faker.internet.password();
 
-      usersService.findByName.mockReturnValue(null)
+      usersService.findByName.mockReturnValue(null);
 
       // Then
-      expect(async () => await service.login(username, password)).rejects.toThrow(UnauthorizedException)
-      expect(usersService.findByName).toHaveBeenNthCalledWith(1, username)
+      expect(
+        async () => await service.login(username, password),
+      ).rejects.toThrow(UnauthorizedException);
+      expect(usersService.findByName).toHaveBeenNthCalledWith(1, username);
     });
 
     it('should throw authentication exception when username password is not correct', async () => {
       // Given
-      const username = faker.internet.username()
-      const wrongPassword = faker.internet.password()
-      const correctPassword = faker.internet.password()
+      const username = faker.internet.username();
+      const wrongPassword = faker.internet.password();
+      const correctPassword = faker.internet.password();
 
-      const salt = bcrypt.genSaltSync(10)
+      const salt = bcrypt.genSaltSync(10);
       const hashedPassword = await bcrypt.hash(correctPassword, salt);
 
-      const user = new UserEntity()
-      user.password = hashedPassword
-      user.name = username
+      const user = new UserEntity();
+      user.password = hashedPassword;
+      user.name = username;
 
-      usersService.findByName.mockResolvedValue(user)
+      usersService.findByName.mockResolvedValue(user);
 
       // Then
-      expect(async () => await service.login(username, wrongPassword)).rejects.toThrow(UnauthorizedException)
-      expect(usersService.findByName).toHaveBeenNthCalledWith(1, username)
+      expect(
+        async () => await service.login(username, wrongPassword),
+      ).rejects.toThrow(UnauthorizedException);
+      expect(usersService.findByName).toHaveBeenNthCalledWith(1, username);
     });
 
     it('should return JWT token', async () => {
       // Given
-      const username = faker.internet.username()
-      const password = faker.internet.password()
+      const username = faker.internet.username();
+      const password = faker.internet.password();
 
-      const salt = bcrypt.genSaltSync(10)
+      const salt = bcrypt.genSaltSync(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const user = new UserEntity()
-      user.id = faker.string.uuid()
-      user.password = hashedPassword
-      user.name = username
+      const user = new UserEntity();
+      user.id = faker.string.uuid();
+      user.password = hashedPassword;
+      user.name = username;
 
-      const expectedToken = faker.internet.jwt()
+      const expectedToken = faker.internet.jwt();
 
       const expectedResult = {
-        access_token: expectedToken
-      }
+        access_token: expectedToken,
+      };
 
-      usersService.findByName.mockResolvedValue(user)
-      jwtService.signAsync.mockResolvedValue(expectedToken)
+      usersService.findByName.mockResolvedValue(user);
+      jwtService.signAsync.mockResolvedValue(expectedToken);
 
       // When
-      const result = await service.login(username, password)
+      const result = await service.login(username, password);
 
       // Then
-      expect(result).toEqual(expectedResult)
+      expect(result).toEqual(expectedResult);
     });
-  })
-
+  });
 });
