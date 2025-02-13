@@ -9,14 +9,6 @@ import { UsersService } from '../users/users.service';
 import { TmdbService } from '../tmdb/tmdb.service';
 import { FilmsReporitory } from './films.repository';
 
-export type MockType<T> = {
-  [P in keyof T]?: jest.Mock<{}>;
-};
-
-export const repositoryMockFactory: () => MockType<Repository<FilmEntity>> =
-  jest.fn(() => ({
-    findOne: jest.fn((entity) => entity),
-  }));
 
 describe('FilmsService', () => {
   let service: FilmsService;
