@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 import { Film } from './film.interface';
 
 @Injectable()
-export class FilmsReporitory {
-  private readonly logger = new Logger(FilmsReporitory.name);
+export class FilmsRepository {
+  private readonly logger = new Logger(FilmsRepository.name);
 
   constructor(
     @InjectRepository(FilmEntity)

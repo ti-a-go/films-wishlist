@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { Mocked, TestBed } from '@suites/unit';
 import { UsersService } from '../users/users.service';
 import { TmdbService } from '../tmdb/tmdb.service';
-import { FilmsReporitory } from './films.repository';
+import { FilmsRepository } from './films.repository';
 
 
 describe('FilmsService', () => {
@@ -15,7 +15,7 @@ describe('FilmsService', () => {
 
   let usersService: Mocked<UsersService>;
   let tmdbService: Mocked<TmdbService>;
-  let filmsRepository: Mocked<FilmsReporitory>;
+  let filmsRepository: Mocked<FilmsRepository>;
 
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(FilmsService).compile();
@@ -23,7 +23,7 @@ describe('FilmsService', () => {
     service = unit;
     usersService = unitRef.get(UsersService);
     tmdbService = unitRef.get(TmdbService);
-    filmsRepository = unitRef.get(FilmsReporitory);
+    filmsRepository = unitRef.get(FilmsRepository);
   });
 
   it('should be defined', () => {

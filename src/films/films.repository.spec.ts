@@ -1,6 +1,6 @@
 import { Repository } from "typeorm";
 import { FilmEntity } from "./film.entity";
-import { FilmsReporitory } from "./films.repository";
+import { FilmsRepository } from "./films.repository";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { faker } from "@faker-js/faker/.";
@@ -17,18 +17,18 @@ export const repositoryMockFactory: () => MockType<Repository<FilmEntity>> =
 
 
 describe('FilmsRepository', () => {
-    let repository: FilmsReporitory;
+    let repository: FilmsRepository;
     let typeOrmRepository: MockType<Repository<FilmEntity>>;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                FilmsReporitory,
+                FilmsRepository,
                 { provide: getRepositoryToken(FilmEntity), useFactory: repositoryMockFactory },
             ],
         }).compile();
 
-        repository = module.get<FilmsReporitory>(FilmsReporitory);
+        repository = module.get<FilmsRepository>(FilmsRepository);
         typeOrmRepository = module.get(getRepositoryToken(FilmEntity));
     });
 

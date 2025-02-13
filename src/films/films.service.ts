@@ -4,14 +4,14 @@ import { CreateFilmeDTO } from './dto/CreateFilme.dto';
 import { UserEntity } from '../users/user.entity';
 import { TmdbService } from '../tmdb/tmdb.service';
 import { UsersService } from '../users/users.service';
-import { FilmsReporitory } from './films.repository';
+import { FilmsRepository } from './films.repository';
 
 @Injectable()
 export class FilmsService {
   constructor(
     private readonly usersService: UsersService,
     private readonly tmdbService: TmdbService,
-    private readonly filmsRepository: FilmsReporitory,
+    private readonly filmsRepository: FilmsRepository,
   ) {}
 
   async addFilmToWishlist(userId: string, filmData: CreateFilmeDTO) {
