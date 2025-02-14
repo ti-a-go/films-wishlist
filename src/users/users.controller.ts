@@ -3,11 +3,13 @@ import { HashPasswordPipe } from '../resources/pipes/hash-password.pipe';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { UsersService } from './users.service';
 import { CreatedUserDTO } from './dto/CreatedUser.dto';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('/users')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
+  @ApiOperation({ summary: 'Create a new user.' })
   @Post()
   async createUser(
     @Body() { password, ...userData }: CreateUserDTO,
