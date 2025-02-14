@@ -38,6 +38,12 @@ export class UsersService {
   async addFilmToUserWishlist(film: FilmEntity, userId: string) {
     let user = await this.usersRepository.findUserWithWishlist(userId);
 
+    if (user === null) {
+      this.logger.error('Could not find user to add film to wishlist.')
+      
+      throw new NotFoundException('User not found.')
+    }
+
     if (!user.wishlist) {
       user.wishlist = new WishlistEntity();
       user.wishlist.wishes = [];

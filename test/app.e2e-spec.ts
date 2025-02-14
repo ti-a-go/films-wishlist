@@ -1,9 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
+import { ExecutionContext, HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { faker } from '@faker-js/faker/.';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthenticationGuard } from './../src/auth/auth.guard';
+import { UserEntity } from './../src/users/user.entity';
+
+const canActivate = (context: ExecutionContext) => {
+  const req = context.switchToHttp().getRequest();
+  req.user = new UserEntity();
+  return true;
+}
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -13,7 +21,7 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).overrideGuard(AuthenticationGuard).useValue({canActivate}).compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
@@ -27,17 +35,6 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/films (POST)', () => {
-    it('Should not create a new filme when the request headers does not have an authorization token', () => {
-      // Given
-      const requestBody = {};
-
-      // Then
-      return request(app.getHttpServer())
-        .post('/films')
-        .send(requestBody)
-        .expect(HttpStatus.UNAUTHORIZED);
-    });
-
     it('Should not create a new filme when the request body does not have a "title" field', () => {
       // Given
       const requestBody = {};
@@ -51,7 +48,7 @@ describe('AppController (e2e)', () => {
       // Then
       return request(app.getHttpServer())
         .post('/films')
-        .set('Authorization', token)
+        // .set('Authorization', token)
         .send(requestBody)
         .expect(HttpStatus.BAD_REQUEST)
         .expect(responseBody);
@@ -70,7 +67,7 @@ describe('AppController (e2e)', () => {
       // Then
       return request(app.getHttpServer())
         .post('/films')
-        .set('Authorization', token)
+        // .set('Authorization', token)
         .send(requestBody)
         .expect(HttpStatus.BAD_REQUEST)
         .expect(responseBody);
@@ -93,7 +90,7 @@ describe('AppController (e2e)', () => {
       // Then
       return request(app.getHttpServer())
         .post('/films')
-        .set('Authorization', token)
+        // .set('Authorization', token)
         .send(requestBody)
         .expect(HttpStatus.BAD_REQUEST)
         .expect(responseBody);

@@ -6,8 +6,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker/.';
 import { WishlistEntity } from '../wishlist/wishlist.entity';
 
+
 export type MockType<T> = {
-  [P in keyof T]?: jest.Mock<{}>;
+  findOne: jest.Mock<{}>;
+  save: jest.Mock<{}>;
 };
 
 export const repositoryMockFactory: () => MockType<Repository<UserEntity>> =

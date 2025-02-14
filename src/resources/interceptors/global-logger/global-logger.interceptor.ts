@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable, tap } from 'rxjs';
 import { RequestWithUser } from '../../../auth/auth.guard';
-import { LogEntity } from '../../../logs/log.entity';
+import { LogEntity } from '../../../log/log.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

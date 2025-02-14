@@ -30,7 +30,7 @@ describe('AuthService', () => {
       const username = faker.internet.username();
       const password = faker.internet.password();
 
-      usersRepository.findByName.mockReturnValue(null);
+      usersRepository.findByName.mockImplementation(() => Promise.resolve(null));
 
       // Then
       expect(

@@ -29,7 +29,7 @@ export class WishEntity {
   })
   status: Status;
 
-  @Column({ name: 'recommanded', nullable: true })
+  @Column({ name: 'recommanded', nullable: true, type: 'boolean' })
   recommanded: boolean | null;
 
   @ManyToOne(() => WishlistEntity, (wishlist) => wishlist.wishes)

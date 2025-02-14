@@ -6,7 +6,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker/.';
 
 export type MockType<T> = {
-  [P in keyof T]?: jest.Mock<{}>;
+  findOne: jest.Mock<{}>;
+  save: jest.Mock<{}>;
 };
 
 export const repositoryMockFactory: () => MockType<Repository<FilmEntity>> =

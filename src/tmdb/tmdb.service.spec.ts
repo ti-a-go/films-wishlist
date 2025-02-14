@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import { AxiosError, AxiosRequestHeaders, AxiosResponse } from 'axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { faker } from '@faker-js/faker/.';
+import { NotFoundException } from '@nestjs/common';
 
 describe('TmdbService', () => {
   let service: TmdbService;
@@ -124,7 +125,7 @@ describe('TmdbService', () => {
       );
     });
 
-    it("should return null when search on TBMD's API does not return any film", async () => {
+    it("should return throw NOT_FOUND when search on TBMD's API does not return any film", async () => {
       // Setup
       const tmdbSearchFilmEndpoint = configService.get<string>(
         'TMDB_ENDPOINT_SEARCH_FILM',
@@ -157,10 +158,6 @@ describe('TmdbService', () => {
         year: faker.number.int().toString(),
       };
 
-      // When
-      const foundFilm = await service.searchFilm(film);
-
-      // Then
       const expectedFoundFilm = null;
 
       const expectedRequestParams = {
@@ -175,7 +172,8 @@ describe('TmdbService', () => {
         Authorization: `Bearer ${tmdbApiToken}`,
       };
 
-      expect(foundFilm).toEqual(expectedFoundFilm);
+      // Then
+      expect(async () => await service.searchFilm(film)).rejects.toThrow(NotFoundException);
       expect(httpService.get).toHaveBeenNthCalledWith(
         1,
         tmdbSearchFilmEndpoint,
@@ -183,7 +181,7 @@ describe('TmdbService', () => {
       );
     });
 
-    it('should return throw when TMDB\s API return BAD_REQUEST', async () => {
+    it('should throw when TMDB\s API return BAD_REQUEST', async () => {
       // Setup
       const tmdbSearchFilmEndpoint = configService.get<string>(
         'TMDB_ENDPOINT_SEARCH_FILM',
