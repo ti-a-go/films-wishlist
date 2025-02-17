@@ -1,26 +1,8 @@
-# Backlog
-
-## Make case insensitive query to find film by name
-
-https://github.com/typeorm/typeorm/issues/1231
-
-
-## Update endpoint to change film status
-
-Endpoint: `PUT /films/:id/status`
-
-Nowadays this endpoint only changes status from TO_WATCH to WATCHED. 
-
-Changes:
-- Allow to rate a WATCHED film
-- Allow to recommend a RATED film
-
-
-
-
 # Films wishlist
 
-# How to run
+REST API to help you manage the films you wanna watch or watched. Also rate and recommend (or not) the films you already watched.
+
+## How to run
 
 Rename the `.env.example` file to `.env`
 
@@ -56,3 +38,34 @@ npm run typeorm migration:run
 ```
 
 Now the app should be up and running.
+
+## Run test
+
+Unit tests:
+
+```sh
+npm run test
+```
+
+Integration tests
+
+```sh
+npm run test:integration
+```
+
+# Backlog
+
+## Make case insensitive query to find film by name
+
+https://github.com/typeorm/typeorm/issues/1231
+
+
+## Update endpoint to change film status
+
+Endpoint: `PUT /films/:id/status`
+
+Nowadays this endpoint only changes status from TO_WATCH to WATCHED. 
+
+Changes:
+- Allow to rate a WATCHED film
+- Allow to recommend a RATED film
