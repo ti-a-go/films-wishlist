@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:integration": "docker compose --profile e2e-test up --build --abort-on-container-exit",
-    "typeorm": "typeorm-ts-node-esm -d src/db/data-source-cli.ts"
+    "typeorm": "typeorm-ts-node-esm -d src/db/data-source-cli.ts",
+    "docker": "docker compose --profile app up --force-recreate --build"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",
