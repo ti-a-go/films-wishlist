@@ -9,7 +9,7 @@ Rename the `.env.example` file to `.env`
 Start docker services:
 
 ```sh
-docker compose up
+npm run docker
 ```
 
 ## Run migrations:
@@ -30,8 +30,7 @@ asdf install nodejs 18.18.0
 asdf local nodejs 18.18.0
 ```
 
-Then run the migraions
-
+Then run the migraions:
 
 ```sh
 npm run typeorm migration:run
