@@ -1,32 +1,39 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AxiosError, AxiosResponse } from 'axios';
-import { catchError, firstValueFrom, NotFoundError, of, retry, timer } from 'rxjs';
+import {
+  catchError,
+  firstValueFrom,
+  NotFoundError,
+  of,
+  retry,
+  timer,
+} from 'rxjs';
 import { Film, FilmData } from './film.interface';
 import { ConfigService } from '@nestjs/config';
 
 interface Result {
-  adult: boolean,
-  backdrop_path: string,
-  genre_ids: Array<number>,
-  id: number,
-  original_language: string,
-  original_title: string,
-  overview: string,
-  popularity: number,
-  poster_path: string,
-  release_date: string,
-  title: string,
-  video: boolean,
-  vote_average: number,
-  vote_count: number
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: Array<number>;
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
 }
 
 interface Data {
-  page: number,
-  results: Array<Result>,
-  total_pages: number,
-  total_results: number
+  page: number;
+  results: Array<Result>;
+  total_pages: number;
+  total_results: number;
 }
 
 @Injectable()
@@ -36,7 +43,7 @@ export class TmdbService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   async searchFilm(filmData: FilmData): Promise<Film> {
     const url = this.configService.get<string>('TMDB_ENDPOINT_SEARCH_FILM');
@@ -109,6 +116,8 @@ export class TmdbService {
       return film;
     }
 
-    throw new NotFoundException(`Could not find ${filmData.title} on TMDB's API.`);
+    throw new NotFoundException(
+      `Could not find ${filmData.title} on TMDB's API.`,
+    );
   }
 }

@@ -39,9 +39,9 @@ export class UsersService {
     let user = await this.usersRepository.findUserWithWishlist(userId);
 
     if (user === null) {
-      this.logger.error('Could not find user to add film to wishlist.')
-      
-      throw new NotFoundException('User not found.')
+      this.logger.error('Could not find user to add film to wishlist.');
+
+      throw new NotFoundException('User not found.');
     }
 
     if (!user.wishlist) {

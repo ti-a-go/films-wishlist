@@ -1,5 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ExecutionContext, HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  ExecutionContext,
+  HttpStatus,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { faker } from '@faker-js/faker/.';
@@ -11,7 +16,7 @@ const canActivate = (context: ExecutionContext) => {
   const req = context.switchToHttp().getRequest();
   req.user = new UserEntity();
   return true;
-}
+};
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -19,7 +24,10 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).overrideGuard(AuthenticationGuard).useValue({canActivate}).compile();
+    })
+      .overrideGuard(AuthenticationGuard)
+      .useValue({ canActivate })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(

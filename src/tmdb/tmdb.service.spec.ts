@@ -173,7 +173,9 @@ describe('TmdbService', () => {
       };
 
       // Then
-      expect(async () => await service.searchFilm(film)).rejects.toThrow(NotFoundException);
+      expect(async () => await service.searchFilm(film)).rejects.toThrow(
+        NotFoundException,
+      );
       expect(httpService.get).toHaveBeenNthCalledWith(
         1,
         tmdbSearchFilmEndpoint,

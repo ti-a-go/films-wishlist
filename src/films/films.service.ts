@@ -17,7 +17,6 @@ export class FilmsService {
   async addFilmToWishlist(userId: string, filmData: CreateFilmeDTO) {
     const existentFilm = await this.findFilm(filmData);
 
-    let filmToBeCreaed: Film;
     let user: UserEntity;
 
     if (existentFilm) {
@@ -27,9 +26,9 @@ export class FilmsService {
       );
 
       return user;
-    } else {
-      filmToBeCreaed = await this.tmdbService.searchFilm(filmData);
     }
+
+    const filmToBeCreaed = await this.tmdbService.searchFilm(filmData);
 
     const createdFilm = await this.createFilm(filmToBeCreaed);
 

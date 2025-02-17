@@ -6,7 +6,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker/.';
 import { WishlistEntity } from '../wishlist/wishlist.entity';
 
-
 export type MockType<T> = {
   findOne: jest.Mock<{}>;
   save: jest.Mock<{}>;

@@ -5,6 +5,16 @@
 https://github.com/typeorm/typeorm/issues/1231
 
 
+## Update endpoint to change film status
+
+Endpoint: `PUT /films/:id/status`
+
+Nowadays this endpoint only changes status from TO_WATCH to WATCHED. 
+
+Changes:
+- Allow to rate a WATCHED film
+- Allow to recommend a RATED film
+
 
 
 

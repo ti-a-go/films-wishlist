@@ -20,7 +20,7 @@ export class FilmsController {
     private readonly usersService: UsersService,
   ) {}
 
-  @ApiOperation({ summary: 'Add film to user\'s wishlist.' })
+  @ApiOperation({ summary: "Add film to user's wishlist." })
   @UseGuards(AuthenticationGuard)
   @Post()
   async createFilm(
@@ -30,7 +30,9 @@ export class FilmsController {
     return await this.filmService.addFilmToWishlist(req.user.sub, filmData);
   }
 
-  @ApiOperation({ summary: 'Change the status of a film in the user\'s wishlist.' })
+  @ApiOperation({
+    summary: "Change the status of a film in the user's wishlist.",
+  })
   @UseGuards(AuthenticationGuard)
   @Put(':id/status')
   async updateStatus(@Param('id') filmId: string, @Req() req: RequestWithUser) {
