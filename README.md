@@ -44,6 +44,8 @@ We can see the endpoints documentation at `/api`:
 
 [http://localhost:3000/api](http://localhost:3000/api)
 
+<img src="./docs/images/swagger.png" width="500">
+
 ## Run test
 
 Unit tests:
