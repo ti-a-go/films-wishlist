@@ -15,8 +15,6 @@ const canActivate = (context: ExecutionContext) => {
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  const token =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYTc1YThkNC0xZGJjLTQ5MzgtYjQ0ZC1kYzk1MmIxMThjMjgiLCJ1c2VybmFtZSI6InZhbGVyaWEiLCJpYXQiOjE3MzkyNDEzODAsImV4cCI6MTczOTUwMDU4MH0.d1TyffP88gE1iSmsGc8PQpecxlTR0NszRece1arAJ9M';
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -48,7 +46,6 @@ describe('AppController (e2e)', () => {
       // Then
       return request(app.getHttpServer())
         .post('/films')
-        // .set('Authorization', token)
         .send(requestBody)
         .expect(HttpStatus.BAD_REQUEST)
         .expect(responseBody);
@@ -67,7 +64,6 @@ describe('AppController (e2e)', () => {
       // Then
       return request(app.getHttpServer())
         .post('/films')
-        // .set('Authorization', token)
         .send(requestBody)
         .expect(HttpStatus.BAD_REQUEST)
         .expect(responseBody);
@@ -90,7 +86,6 @@ describe('AppController (e2e)', () => {
       // Then
       return request(app.getHttpServer())
         .post('/films')
-        // .set('Authorization', token)
         .send(requestBody)
         .expect(HttpStatus.BAD_REQUEST)
         .expect(responseBody);
