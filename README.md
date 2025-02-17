@@ -38,6 +38,12 @@ npm run typeorm migration:run
 
 Now the app should be up and running.
 
+## Swagger
+
+We can see the endpoints documentation at `/api`:
+
+[http://localhost:3000/api](http://localhost:3000/api)
+
 ## Run test
 
 Unit tests:
