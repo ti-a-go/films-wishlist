@@ -1,4 +1,4 @@
-# Films wishlist
+# Films wishlist :movie_camera:
 
 REST API to help you manage the films you wanna watch or watched. Also rate and recommend (or not) the films you already watched.
 
