@@ -4,7 +4,11 @@ REST API to help you manage the films you wanna watch or watched. Also rate and 
 
 ## How to run
 
-Rename the `.env.example` file to `.env`
+Rename the `.env.example` file to `.env`:
+
+```sh
+cp .env.example .env
+```
 
 Start docker services:
 
