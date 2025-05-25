@@ -59,7 +59,7 @@ describe('AppController (e2e)', () => {
         .expect(responseBody);
     });
 
-    it('Should not create a new filme when the request body "title" field is empty', () => {
+    it('Should not create a new film when the request body "title" field is empty', () => {
       // Given
       const requestBody = { title: '' };
 
