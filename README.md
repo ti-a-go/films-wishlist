@@ -93,3 +93,17 @@ Nowadays this endpoint only changes status from TO_WATCH to WATCHED.
 Changes:
 - Allow to rate a WATCHED film
 - Allow to recommend a RATED film
+
+# CURLs
+
+
+```bash
+curl -X 'POST' \
+  'http://localhost:3000/users' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "name": "admin",
+  "password": "123456"
+}'
+```
