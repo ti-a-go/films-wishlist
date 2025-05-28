@@ -41,7 +41,7 @@ describe('AuthService', () => {
       expect(usersRepository.findByName).toHaveBeenNthCalledWith(1, username);
     });
 
-    it('should throw authentication exception when username password is not correct', async () => {
+    it('should throw authentication exception when password is not correct', async () => {
       // Given
       const username = faker.internet.username();
       const wrongPassword = faker.internet.password();
