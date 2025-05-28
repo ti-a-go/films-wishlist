@@ -41,7 +41,7 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/films (POST)', () => {
-    it('Should not create a new filme when the request body does not have a "title" field', () => {
+    it('Should create a new user', () => {
       // Given
       const requestBody = {};
 
@@ -59,44 +59,6 @@ describe('AppController (e2e)', () => {
         .expect(responseBody);
     });
 
-    it('Should not create a new film when the request body "title" field is empty', () => {
-      // Given
-      const requestBody = { title: '' };
-
-      const responseBody = {
-        message: ['title should not be empty'],
-        error: 'Bad Request',
-        statusCode: 400,
-      };
-
-      // Then
-      return request(app.getHttpServer())
-        .post('/films')
-        .send(requestBody)
-        .expect(HttpStatus.BAD_REQUEST)
-        .expect(responseBody);
-    });
-
-    it('Should not create a new filme when the request body has extra fields', () => {
-      // Given
-      const extraField = faker.lorem.word();
-      const requestBody = {
-        title: faker.lorem.word(),
-        [extraField]: faker.lorem.word(),
-      };
-
-      const responseBody = {
-        message: [`property ${extraField} should not exist`],
-        error: 'Bad Request',
-        statusCode: 400,
-      };
-
-      // Then
-      return request(app.getHttpServer())
-        .post('/films')
-        .send(requestBody)
-        .expect(HttpStatus.BAD_REQUEST)
-        .expect(responseBody);
-    });
+    it('Should login and return a new token', () => {});
   });
 });

@@ -41,26 +41,4 @@ export class UsersRepository {
       throw new InternalServerErrorException();
     }
   }
-
-  async findUserWithWishlist(id: string) {
-    try {
-      return await this.usersRepository.findOne({
-        where: { id },
-        relations: {
-          wishlist: {
-            wishes: {
-              film: true,
-            },
-          },
-        },
-      });
-    } catch (error) {
-      this.logger.error(
-        'ERROR - Failed to find user with wishlist in the database.',
-      );
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
-
-      throw new InternalServerErrorException();
-    }
-  }
 }

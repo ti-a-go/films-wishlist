@@ -4,7 +4,6 @@ import { UsersRepository } from './users.repository';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker/.';
-import { WishlistEntity } from '../wishlist/wishlist.entity';
 
 export type MockType<T> = {
   findOne: jest.Mock<{}>;
@@ -17,7 +16,7 @@ export const repositoryMockFactory: () => MockType<Repository<UserEntity>> =
     save: jest.fn((entity) => entity),
   }));
 
-describe('FilmsRepository', () => {
+describe('UsersRepository', () => {
   let repository: UsersRepository;
   let typeOrmRepository: MockType<Repository<UserEntity>>;
 
@@ -148,109 +147,6 @@ describe('FilmsRepository', () => {
       expect(async () => await repository.findByName(name)).rejects.toThrow(
         Error,
       );
-      expect(typeOrmRepository.findOne).toHaveBeenNthCalledWith(
-        1,
-        expectedParams,
-      );
-    });
-  });
-
-  describe('findUserWithWishlist', () => {
-    it('Should find a user', async () => {
-      // Given
-      const id = faker.string.uuid();
-
-      const wishlist = new WishlistEntity();
-      wishlist.id = faker.string.uuid();
-      wishlist.createdAt = faker.date.past().toDateString();
-      wishlist.updatedAt = wishlist.createdAt;
-      wishlist.wishes = [];
-
-      const expectedUser = new UserEntity();
-      expectedUser.id = faker.string.uuid();
-      expectedUser.createdAt = faker.date.past().toDateString();
-      expectedUser.updatedAt = expectedUser.createdAt;
-      expectedUser.name = faker.internet.username();
-      expectedUser.password = faker.internet.password();
-      expectedUser.wishlist = wishlist;
-
-      typeOrmRepository.findOne.mockImplementation(() =>
-        Promise.resolve(expectedUser),
-      );
-
-      const expectedParams = {
-        where: { id },
-        relations: {
-          wishlist: {
-            wishes: {
-              film: true,
-            },
-          },
-        },
-      };
-
-      // When
-      const user = await repository.findUserWithWishlist(id);
-
-      // Then
-      expect(user).toEqual(expectedUser);
-      expect(typeOrmRepository.findOne).toHaveBeenNthCalledWith(
-        1,
-        expectedParams,
-      );
-    });
-
-    it('Should not find a user', async () => {
-      // Given
-      const id = faker.string.uuid();
-
-      typeOrmRepository.findOne.mockImplementation(() => Promise.resolve(null));
-
-      const expectedParams = {
-        where: { id },
-        relations: {
-          wishlist: {
-            wishes: {
-              film: true,
-            },
-          },
-        },
-      };
-
-      // When
-      const user = await repository.findUserWithWishlist(id);
-
-      // Then
-      expect(user).toBeNull();
-      expect(typeOrmRepository.findOne).toHaveBeenNthCalledWith(
-        1,
-        expectedParams,
-      );
-    });
-
-    it('Should throw', () => {
-      // Given
-      const id = faker.string.uuid();
-
-      typeOrmRepository.findOne.mockImplementation(() =>
-        Promise.reject(new Error()),
-      );
-
-      const expectedParams = {
-        where: { id },
-        relations: {
-          wishlist: {
-            wishes: {
-              film: true,
-            },
-          },
-        },
-      };
-
-      // Then
-      expect(
-        async () => await repository.findUserWithWishlist(id),
-      ).rejects.toThrow(Error);
       expect(typeOrmRepository.findOne).toHaveBeenNthCalledWith(
         1,
         expectedParams,

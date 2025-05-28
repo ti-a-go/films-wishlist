@@ -9,7 +9,6 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { WishlistEntity } from '../wishlist/wishlist.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -22,10 +21,6 @@ export class UserEntity {
   @Exclude()
   @Column({ name: 'password', length: 255, nullable: false })
   password: string;
-
-  @OneToOne(() => WishlistEntity, { cascade: true })
-  @JoinColumn()
-  wishlist: WishlistEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

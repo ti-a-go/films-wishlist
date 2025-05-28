@@ -8,10 +8,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Films Wishlist')
-    .setDescription('API to manage your films wishlist.')
+    .setTitle('Auth App')
+    .setDescription('API to manage users and authentication.')
     .setVersion('1.0')
-    .addTag('films')
+    .addTag('auth')
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);
