@@ -6,9 +6,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker/.';
 import { WishlistEntity } from '../wishlist/wishlist.entity';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type MockType<T> = {
-  findOne: jest.Mock<{}>;
-  save: jest.Mock<{}>;
+  findOne: jest.Mock<object>;
+  save: jest.Mock<object>;
 };
 
 export const repositoryMockFactory: () => MockType<Repository<UserEntity>> =
