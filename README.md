@@ -79,6 +79,12 @@ Extrair entidades nomeadas do título e do resumo dos filmes. Em seguida, pesqui
 
 # Backlog
 
+## Mover endpoint que atualiza o status de um ítem da lista de desejos
+
+[FilmsController.updateStatus()](./src/films/films.controller.ts)
+
+Esse endpoint deveria está no [módulo de usuários](./src/users/users.controller.ts).
+
 ## Make case insensitive query to find film by name
 
 https://github.com/typeorm/typeorm/issues/1231
