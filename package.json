@@ -22,6 +22,7 @@
     "test:integration": "docker compose --profile e2e-test up --build --abort-on-container-exit",
     "typeorm": "typeorm-ts-node-esm -d src/db/data-source-cli.ts",
     "docker": "docker compose --profile app up --force-recreate",
+    "docker:down": "docker compose --profile app down -v",
     "docker:build": "docker compose --profile app up --force-recreate --build",
     "ci": "npm run build && npm run format && npm run lint && npm run test"
   },
