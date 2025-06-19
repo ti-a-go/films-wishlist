@@ -8,9 +8,10 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start:nest": "nest start",
+    "start": "docker compose --profile app up --build",
     "start:dev": "nest start --watch",
-    "start:docker": "docker compose up --profile app",
+    "start:docker": "docker compose --profile app up",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -24,7 +25,8 @@
     "docker": "docker compose --profile app up --force-recreate",
     "docker:down": "docker compose --profile app down -v",
     "docker:build": "docker compose --profile app up --force-recreate --build",
-    "ci": "npm run build && npm run format && npm run lint && npm run test"
+    "ci": "npm run build && npm run format && npm run lint && npm run test",
+    "reset": "rm -rf node_modules && npm i"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",
@@ -37,7 +39,7 @@
     "@nestjs/swagger": "^8.1.1",
     "@nestjs/typeorm": "^11.0.0",
     "axios": "^1.7.9",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.7",
