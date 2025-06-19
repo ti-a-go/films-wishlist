@@ -15,6 +15,10 @@ export class AuthController {
   })
   @Post('login')
   login(@Body() { username, password }: AuthDTO) {
+    this.logger.log(
+      `Starting auth controller: login endpoint. Username: ${username}`,
+    );
+
     return this.authService.login(username, password);
   }
 
@@ -24,7 +28,9 @@ export class AuthController {
     @Body() { username, password }: AuthDTO,
     @Body('password', HashPasswordPipe) hashedPassword: string,
   ) {
-    this.logger.log(`Starting: ${hashedPassword}`);
+    this.logger.log(
+      `Starting auth controller: register endpoint. Username: ${username}`,
+    );
 
     return this.authService.register(username, hashedPassword);
   }
