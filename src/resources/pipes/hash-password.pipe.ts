@@ -13,7 +13,9 @@ export class HashPasswordPipe implements PipeTransform {
 
   constructor(private configService: ConfigService) {}
 
-  async transform(password: string) {
+  transform(password: string) {
+    this.logger.log('Starting...');
+
     const salt = this.configService.get<string>('SALT');
 
     if (!salt) {
@@ -22,7 +24,25 @@ export class HashPasswordPipe implements PipeTransform {
       throw new InternalServerErrorException();
     }
 
-    const senhaHasheada = await bcrypt.hash(password, salt);
+    this.logger.log('Hashing password...');
+
+    let senhaHasheada: string | undefined;
+
+    try {
+      senhaHasheada = bcrypt.hashSync(password, salt);
+    } catch (error) {
+      this.logger.error('Error while hashing password', error);
+
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+
+    if (!senhaHasheada) {
+      this.logger.error(`Hashed password null or undefined: ${senhaHasheada}`);
+
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+
+    this.logger.log(`Hashed password: ${senhaHasheada}`);
 
     return senhaHasheada;
   }
