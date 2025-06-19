@@ -42,7 +42,7 @@ export class HashPasswordPipe implements PipeTransform {
       throw new InternalServerErrorException('Internal Server Error');
     }
 
-    this.logger.log(`Hashed password: ${senhaHasheada}`);
+    this.logger.log(`Hashed password.`);
 
     return senhaHasheada;
   }
