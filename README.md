@@ -2,7 +2,9 @@
 
 REST API to help you manage the films you wanna watch or watched. Also rate and recommend (or not) the films you already watched.
 
-## How to run
+# How to run
+
+## Environment Variables (`.env` file)
 
 Rename the `.env.example` file to `.env`:
 
@@ -10,37 +12,71 @@ Rename the `.env.example` file to `.env`:
 cp .env.example .env
 ```
 
-Start docker services:
+Development: start docker services (API and Database):
 
 ```sh
-npm run docker
+npm run start
 ```
 
 ## Run migrations:
 
+### Node version to run the migrations
+
 Due to [this issue](https://github.com/typeorm/typeorm/issues/10537), TypeORM only runs with Node version 18.18.0.
 
-To run the migrations user the `.tool-versions` file to set the correct node version.
+To run the migrations use the `.tool-versions` file to set the correct node version.
 
 If you don't have this node installed, please install.
 
-Suggestion:
+### Installing NodeJS using [asdf](https://asdf-vm.com/guide/getting-started.html):
 
 ```sh
 asdf install nodejs 18.18.0
 ```
 
 ```sh
-asdf local nodejs 18.18.0
+asdf set local nodejs 18.18.0
+asdf set nodejs 18.18.0
 ```
 
-Then run the migraions:
+### Installing using [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script)
+
+```sh
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+```
+
+## Database hostname (`.env` file):
+
+```sh
+# In the '.env' file, change the value of the DATABASE_HOST environment variable from this:
+DATABASE_HOST=films-wishlist-db
+
+# To this:
+DATABASE_HOST=localhojst
+
+# Revert this after run the migrations.
+```
+
+## Now run the migraions:
 
 ```sh
 npm run typeorm migration:run
 ```
 
-Now the app should be up and running.
+### Upgrade node version
+
+```sh
+asdf set local nodejs 20.0.0
+asdf set nodejs 20.0.0
+```
+
+### Restart the application
+
+Kill the shell and run:
+
+```sh
+npm run start
+```
 
 ## Swagger
 
@@ -63,39 +99,3 @@ Integration tests
 ```sh
 npm run test:integration
 ```
-
-# Recomendação de filmes com base na 'wishlist' de um usuário.
-
-Quando um usuário cria uma lista de desejos e adiciona um filme à essa lista, o sistema gera uma lista de recomendações com base em alguns dados do título e da sinópse dos filmes dessa lista.
-
-## Solução técnica
-
-Extrair entidades nomeadas do título e do resumo dos filmes. Em seguida, pesquisar no TMDB por novos filmes usando essas entidades encontradas como query.
-
-## Extração de Entidades Nomeadas
-
-## Classificação e Similaridade entre Textos
-
-
-# Backlog
-
-## Mover endpoint que atualiza o status de um ítem da lista de desejos
-
-[FilmsController.updateStatus()](./src/films/films.controller.ts)
-
-Esse endpoint deveria está no [módulo de usuários](./src/users/users.controller.ts).
-
-## Make case insensitive query to find film by name
-
-https://github.com/typeorm/typeorm/issues/1231
-
-
-## Update endpoint to change film status
-
-Endpoint: `PUT /films/:id/status`
-
-Nowadays this endpoint only changes status from TO_WATCH to WATCHED. 
-
-Changes:
-- Allow to rate a WATCHED film
-- Allow to recommend a RATED film
