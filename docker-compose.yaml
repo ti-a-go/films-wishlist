@@ -16,6 +16,8 @@ services:
       - films-wishlist
     profiles:
       - app
+    volumes:
+      - .:/usr/src/app
 
   database:
     container_name: films-wishlist-db

@@ -6,8 +6,6 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . .
-
 FROM base AS development
 
 EXPOSE 3000
