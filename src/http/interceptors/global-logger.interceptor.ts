@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable } from 'rxjs';
-import { RequestWithUser } from '../../../auth/auth.guard';
-import { LogEntity } from '../../../log/log.entity';
+import { RequestWithUser } from '../../auth/auth.guard';
+import { LogEntity } from '../../log/log.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { GlobalLoggerInterceptor } from './resources/interceptors/global-logger/global-logger.interceptor';
+import { GlobalLoggerInterceptor } from './http/interceptors/global-logger.interceptor';
 import { imports } from './app.module.imports';
 
 @Module({

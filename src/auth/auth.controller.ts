@@ -2,7 +2,7 @@ import { Controller, Post, Body, Logger } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDTO } from './dto/auth.dto';
 import { ApiOperation } from '@nestjs/swagger';
-import { HashPasswordPipe } from '../resources/pipes/hash-password.pipe';
+import { HashPasswordPipe } from '../http/pipes/hash-password.pipe';
 
 @Controller('auth')
 export class AuthController {

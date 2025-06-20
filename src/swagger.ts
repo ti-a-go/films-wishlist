@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { Settings } from './settings';
+import { Settings } from './config/settings';
 import { SwaggerModule } from '@nestjs/swagger';
 
 export const setupSwagger = (app: INestApplication) => {

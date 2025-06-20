@@ -1,3 +1,24 @@
+# Permission error in `dist/` folder
+
+When running the `npm run ci` script we can get the following:
+
+```sh
+> films-wishlist@0.0.1 ci
+> npm run build && npm run format && npm run lint && npm run test
+
+> films-wishlist@0.0.1 build
+> nest build
+
+Error  EACCES: permission denied, unlink '/home/tiago/films-wishlist/dist/app.module.d.ts'
+```
+
+Solution:
+
+```ah
+sudo chown -R $USER /home/tiago/films-wishlist/dist
+```
+
+
 # Erro de Authenticação
 
 ```shell

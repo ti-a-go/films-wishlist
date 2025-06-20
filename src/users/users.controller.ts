@@ -7,7 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { HashPasswordPipe } from '../resources/pipes/hash-password.pipe';
+import { HashPasswordPipe } from '../http/pipes/hash-password.pipe';
 import { CreateUserDTO } from './dto/CreateUser.dto';
 import { UsersService } from './users.service';
 import { CreatedUserDTO } from './dto/CreatedUser.dto';
