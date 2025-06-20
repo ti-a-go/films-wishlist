@@ -158,8 +158,6 @@ describe('TmdbService', () => {
         year: faker.number.int().toString(),
       };
 
-      const expectedFoundFilm = null;
-
       const expectedRequestParams = {
         query: film.title,
         language: film.language,
@@ -185,9 +183,6 @@ describe('TmdbService', () => {
 
     it('should throw when TMDB\s API return BAD_REQUEST', async () => {
       // Setup
-      const tmdbSearchFilmEndpoint = configService.get<string>(
-        'TMDB_ENDPOINT_SEARCH_FILM',
-      );
 
       const config = {
         url: 'http://localhost:3000',
@@ -227,9 +222,6 @@ describe('TmdbService', () => {
 
     it('should retry when TMDB\s API return INTERNAL_SERVER_ERROR', async () => {
       // Setup
-      const tmdbSearchFilmEndpoint = configService.get<string>(
-        'TMDB_ENDPOINT_SEARCH_FILM',
-      );
 
       const config = {
         url: 'http://localhost:3000',

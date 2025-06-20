@@ -36,7 +36,7 @@ export class UsersService {
   }
 
   async addFilmToUserWishlist(film: FilmEntity, userId: string) {
-    let user = await this.usersRepository.findUserWithWishlist(userId);
+    const user = await this.usersRepository.findUserWithWishlist(userId);
 
     if (user === null) {
       this.logger.error('Could not find user to add film to wishlist.');
@@ -110,7 +110,7 @@ export class UsersService {
 
     if (foundWish.status === Status.WATCHED) {
       throw new BadRequestException(
-        'Film alread watched. To rate the film user PUT /rate endpoint.',
+        'Film alread watched. To rate the film use the endpoint: PUT /rates.',
       );
     }
 

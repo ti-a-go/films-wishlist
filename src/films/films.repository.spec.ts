@@ -5,9 +5,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { faker } from '@faker-js/faker/.';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type MockType<T> = {
-  findOne: jest.Mock<{}>;
-  save: jest.Mock<{}>;
+  findOne: jest.Mock<object>;
+  save: jest.Mock<object>;
 };
 
 export const repositoryMockFactory: () => MockType<Repository<FilmEntity>> =
@@ -94,7 +95,7 @@ describe('FilmsRepository', () => {
       );
 
       // Then
-      expect(film).toBeNull;
+      expect(film).toBeNull();
       expect(typeOrmRepository.findOne).toHaveBeenNthCalledWith(
         1,
         expectedParams,

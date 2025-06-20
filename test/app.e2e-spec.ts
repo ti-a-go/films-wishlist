@@ -8,7 +8,6 @@ import {
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { faker } from '@faker-js/faker/.';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthenticationGuard } from './../src/auth/auth.guard';
 import { UserEntity } from './../src/users/user.entity';
 

@@ -5,7 +5,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { RequestWithUser } from '../../../auth/auth.guard';
 import { LogEntity } from '../../../log/log.entity';
 import { Repository } from 'typeorm';

@@ -27,12 +27,28 @@ export class UserEntity {
   @JoinColumn()
   wishlist: WishlistEntity;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: string;
 
-  @UpdateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: string;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  static create(username: string, password: string) {
+    const user = new UserEntity();
+
+    user.name = username;
+    user.password = password;
+
+    return user;
+  }
 }

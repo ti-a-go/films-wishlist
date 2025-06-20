@@ -1,14 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { AxiosError, AxiosResponse } from 'axios';
-import {
-  catchError,
-  firstValueFrom,
-  NotFoundError,
-  of,
-  retry,
-  timer,
-} from 'rxjs';
+import { AxiosError } from 'axios';
+import { catchError, firstValueFrom, of } from 'rxjs';
 import { Film, FilmData } from './film.interface';
 import { ConfigService } from '@nestjs/config';
 

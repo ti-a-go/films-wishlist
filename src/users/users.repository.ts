@@ -35,8 +35,10 @@ export class UsersRepository {
     } catch (error) {
       this.logger.error(
         'Error while trying to find user by name on the database',
+        // error?.stack,
+        error,
       );
-      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
+      // this.logger.error(`${JSON.stringify(error)}`);
 
       throw new InternalServerErrorException();
     }
