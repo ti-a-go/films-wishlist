@@ -131,4 +131,8 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
+
+  async findById(id: string) {
+    return this.usersRepository.findById(id);
+  }
 }

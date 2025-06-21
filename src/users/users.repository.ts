@@ -62,4 +62,15 @@ export class UsersRepository {
       throw new InternalServerErrorException();
     }
   }
+
+  findById(id: string) {
+    try {
+      return this.usersRepository.findOneBy({ id });
+    } catch (error) {
+      this.logger.error('ERROR - Failed to find user by ID in the database.');
+      this.logger.error(`ERROR - ${JSON.stringify(error)}`);
+
+      throw new InternalServerErrorException();
+    }
+  }
 }

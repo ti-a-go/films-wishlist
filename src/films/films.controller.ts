@@ -27,7 +27,7 @@ export class FilmsController {
     @Body() filmData: CreateFilmeDTO,
     @Req() req: RequestWithUser,
   ) {
-    return await this.filmService.addFilmToWishlist(req.user.sub, filmData);
+    return await this.filmService.addFilmToWishlist(req.user.id, filmData);
   }
 
   @ApiOperation({
