@@ -1,9 +1,10 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { Film, FilmData } from './film.interface';
 import { ConfigService } from '@nestjs/config';
+import { AppLogger } from '../logger';
 
 interface Result {
   adult: boolean;
@@ -31,7 +32,7 @@ interface Data {
 
 @Injectable()
 export class TmdbService {
-  private readonly logger = new Logger(TmdbService.name);
+  private readonly logger = new AppLogger(TmdbService.name);
 
   constructor(
     private readonly httpService: HttpService,

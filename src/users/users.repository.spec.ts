@@ -18,7 +18,7 @@ export const repositoryMockFactory: () => MockType<Repository<UserEntity>> =
     save: jest.fn((entity) => entity),
   }));
 
-describe('FilmsRepository', () => {
+describe('UsersRepository', () => {
   let repository: UsersRepository;
   let typeOrmRepository: MockType<Repository<UserEntity>>;
 
