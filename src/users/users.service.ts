@@ -11,6 +11,7 @@ import { FilmEntity } from '../films/film.entity';
 import { WishlistEntity } from '../wishlist/wishlist.entity';
 import { Status, WishEntity } from '../wishlist/wish.entity';
 import { UsersRepository } from './users.repository';
+import { UserPayload } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
@@ -130,5 +131,13 @@ export class UsersService {
     });
 
     return this.usersRepository.save(user);
+  }
+
+  async getWishlist(user: UserPayload) {
+    const userWithWishlist = await this.usersRepository.findUserWithWishlist(
+      user.sub,
+    );
+
+    return userWithWishlist?.wishlist ?? [];
   }
 }

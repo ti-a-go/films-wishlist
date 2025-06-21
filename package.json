@@ -26,7 +26,8 @@
     "docker:down": "docker compose --profile app down -v",
     "docker:build": "docker compose --profile app up --force-recreate --build",
     "ci": "npm run build && npm run format && npm run lint && npm run test",
-    "reset": "rm -rf node_modules && npm i"
+    "reset": "rm -rf node_modules && npm i",
+    "generate": "nest generate"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",
