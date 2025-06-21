@@ -1,6 +1,5 @@
 import {
   Injectable,
-  Logger,
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
@@ -8,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../users/users.repository';
 import { UserEntity } from '../users/user.entity';
+import { AppLogger } from '../logger';
 
 export interface UserPayload {
   sub: string;
@@ -16,7 +16,7 @@ export interface UserPayload {
 
 @Injectable()
 export class AuthService {
-  private readonly logger = new Logger(AuthService.name);
+  private readonly logger = new AppLogger(AuthService.name);
 
   constructor(
     private userRepository: UsersRepository,
