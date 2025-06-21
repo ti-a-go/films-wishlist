@@ -98,4 +98,47 @@ describe('AppController (e2e)', () => {
         .expect(responseBody);
     });
   });
+
+  describe('POST /login', () => {
+    it('Should authenticate user and return a token', () => {
+      // Given
+      const requestBody = {
+        username: 'string',
+        password: 'string',
+      };
+
+      // When
+      // Then
+      return request(app.getHttpServer())
+        .post('/login')
+        .send(requestBody)
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('Should return authentication error when username is incorrect', () => {
+      // Given
+      // When
+      // Then
+    });
+
+    it('Should return authentication error when password is incorrect', () => {
+      // Given
+      // When
+      // Then
+    });
+  });
+
+  describe('POST /register', () => {
+    it('Should return conflict error when username already exists', () => {
+      // Given
+      // When
+      // Then
+    });
+
+    it('Should create a user', () => {
+      // Given
+      // When
+      // Then
+    });
+  });
 });

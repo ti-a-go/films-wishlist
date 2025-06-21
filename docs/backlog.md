@@ -1,3 +1,7 @@
+# Add Usecase [Nest providers](https://docs.nestjs.com/providers)
+
+São providers que contém as regras de negócio.
+
 # GET /wishlist
 
 Retorna todos os filmes da lista de desejos do usuário.

@@ -131,4 +131,8 @@ export class UsersService {
 
     return this.usersRepository.save(user);
   }
+
+  findById(userId: string) {
+    this.usersRepository.findById();
+  }
 }

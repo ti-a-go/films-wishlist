@@ -7,16 +7,16 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { FilmsService } from './films.service';
 import { CreateFilmeDTO } from './dto/CreateFilme.dto';
 import { AuthenticationGuard, RequestWithUser } from '../auth/auth.guard';
 import { UsersService } from '../users/users.service';
 import { ApiOperation } from '@nestjs/swagger';
+import { Application } from '../application/application';
 
 @Controller('films')
 export class FilmsController {
   constructor(
-    private readonly filmService: FilmsService,
+    private readonly application: Application,
     private readonly usersService: UsersService,
   ) {}
 
@@ -27,7 +27,7 @@ export class FilmsController {
     @Body() filmData: CreateFilmeDTO,
     @Req() req: RequestWithUser,
   ) {
-    return await this.filmService.addFilmToWishlist(req.user.sub, filmData);
+    return await this.application.addFilmToUserWishlist(req.user, filmData);
   }
 
   @ApiOperation({
