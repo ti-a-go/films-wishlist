@@ -1,3 +1,8 @@
+# GET /wishlist
+
+Retorna todos os filmes da lista de desejos do usuário.
+
+
 # Recomendação de filmes com base na 'wishlist' de um usuário.
 
 Quando um usuário cria uma lista de desejos e adiciona um filme à essa lista, o sistema gera uma lista de recomendações com base em alguns dados do título e da sinópse dos filmes dessa lista.
