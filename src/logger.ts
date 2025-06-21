@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { Settings } from './config/settings';
 
 export class AppLogger {
   private nestLogger: Logger;
@@ -8,6 +9,14 @@ export class AppLogger {
   }
 
   log(message: string) {
-    this.nestLogger.log(message);
+    if (!Settings.isTestEnv()) {
+      this.nestLogger.log(message);
+    }
+  }
+
+  error(message: string, stack?: string) {
+    if (!Settings.isTestEnv()) {
+      this.nestLogger.error(message, stack);
+    }
   }
 }
