@@ -3,10 +3,12 @@ import {
   DeleteDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { WishEntity } from './wish.entity';
+import { UserEntity } from 'src/users/user.entity';
 
 @Entity({ name: 'wishlists' })
 export class WishlistEntity {
@@ -15,6 +17,9 @@ export class WishlistEntity {
 
   @OneToMany(() => WishEntity, (wish) => wish.wishlist, { cascade: true })
   wishes: WishEntity[];
+
+  @OneToOne(() => UserEntity)
+  user: UserEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

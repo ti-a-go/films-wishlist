@@ -133,6 +133,6 @@ export class UsersService {
   }
 
   findById(userId: string) {
-    this.usersRepository.findById();
+    this.usersRepository.findUserWithWishlist(userId);
   }
 }

@@ -1,6 +1,10 @@
 import { DocumentBuilder } from '@nestjs/swagger';
 
 export class Settings {
+  static getSwaggerPath() {
+    return process.env.SWAGGER_PATH ?? 'api';
+  }
+
   static isTestEnv() {
     return process.env.NODE_ENV === 'test';
   }

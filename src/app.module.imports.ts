@@ -8,11 +8,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WishlistModule } from './wishlist/wishlist.module';
 import { LogsModule } from './log/logs.module';
 import { LogEntity } from './log/log.entity';
+import { ApplicationModule } from './application/application.module';
 
 export const imports = [
   FilmsModule,
   TmdbModule,
   AuthModule,
+  ApplicationModule,
   UsersModule,
   ConfigModule.forRoot({
     isGlobal: true,
