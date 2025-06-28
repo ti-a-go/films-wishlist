@@ -2,6 +2,9 @@
 
 Retorna todos os filmes da lista de desejos do usuário.
 
+# Pre carregar user no pipe de autenticação
+
+Fazer isso para a rota POST /films que adiciona um filme na lista de desejos de um usuário.
 
 # Recomendação de filmes com base na 'wishlist' de um usuário.
 
