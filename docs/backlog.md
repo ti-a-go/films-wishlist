@@ -1,3 +1,7 @@
+# GET /filmes/:id/recomentations
+
+Retorna uma lista de recomendações com base em um filme.
+
 # GET /wishlist
 
 Retorna todos os filmes da lista de desejos do usuário.
