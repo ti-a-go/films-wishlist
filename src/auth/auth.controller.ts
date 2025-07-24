@@ -14,16 +14,16 @@ export class AuthController {
     summary: 'Authenticate user and create authentication token.',
   })
   @Post('login')
-  login(@Body() { username, password }: AuthDTO) {
+  async login(@Body() { username, password }: AuthDTO) {
     this.logger.log(
       `Starting auth controller: login endpoint. Username: ${username}`,
     );
 
-    return this.authService.login(username, password);
+    return await this.authService.login(username, password);
   }
 
   @Post('register')
-  register(
+  async register(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() { username, password }: AuthDTO,
     @Body('password', HashPasswordPipe) hashedPassword: string,
@@ -32,6 +32,6 @@ export class AuthController {
       `Starting auth controller: register endpoint. Username: ${username}`,
     );
 
-    return this.authService.register(username, hashedPassword);
+    return await this.authService.register(username, hashedPassword);
   }
 }
