@@ -92,4 +92,24 @@ describe('AuthService', () => {
       expect(result).toEqual(expectedResult);
     });
   });
+
+  describe('register', () => {
+    test('should throw when username already exists', () => {
+      // Given
+      // When
+      // Then
+    });
+
+    test('should throw when user repository throws', () => {
+      // Given
+      // When
+      // Then
+    });
+
+    test('should create a new user and return the username', () => {
+      // Given
+      // When
+      // Then
+    });
+  });
 });
