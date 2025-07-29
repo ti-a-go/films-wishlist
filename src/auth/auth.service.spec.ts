@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { Mocked, TestBed } from '@suites/unit';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../users/user.entity';
-import { UnauthorizedException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UsersRepository } from '../users/users.repository';
 
@@ -96,20 +96,56 @@ describe('AuthService', () => {
   describe('register', () => {
     test('should throw when username already exists', () => {
       // Given
-      // When
+      const username = faker.internet.username();
+      const password = faker.internet.password();
+
+      usersRepository.findByName.mockImplementation(() =>
+        Promise.resolve(new UserEntity()),
+      );
+
       // Then
+      expect(async () => {
+        await service.register(username, password);
+      }).rejects.toThrow(ConflictException);
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(1, username);
+      expect(usersRepository.save).not.toHaveBeenCalled();
     });
 
     test('should throw when user repository throws', () => {
       // Given
-      // When
+      const username = faker.internet.username();
+      const password = faker.internet.password();
+
+      usersRepository.findByName.mockImplementation(() =>
+        Promise.reject(new Error()),
+      );
+
       // Then
+      expect(async () => {
+        await service.register(username, password);
+      }).rejects.toThrow(Error);
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(1, username);
+      expect(usersRepository.save).not.toHaveBeenCalled();
     });
 
-    test('should create a new user and return the username', () => {
+    test('should create a new user and return the username', async () => {
       // Given
+      const username = faker.internet.username();
+      const password = faker.internet.password();
+      const newUser = UserEntity.create(username, password);
+
+      usersRepository.findByName.mockImplementation(() =>
+        Promise.resolve(null),
+      );
+      usersRepository.save.mockImplementation(() => Promise.resolve(newUser));
+
       // When
+      const result = await service.register(username, password);
+
       // Then
+      expect(result.username).toBe(username);
+      expect(usersRepository.findByName).toHaveBeenNthCalledWith(1, username);
+      expect(usersRepository.save).toHaveBeenNthCalledWith(1, newUser);
     });
   });
 });
