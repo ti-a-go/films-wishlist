@@ -2,6 +2,10 @@ import { join } from 'path';
 import 'dotenv/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+console.log('=================================');
+console.log('NODE_ENV', process.env.NODE_ENV);
+console.log('=================================');
+
 const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: process.env.DATABASE_HOST,

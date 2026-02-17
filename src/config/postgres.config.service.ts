@@ -7,7 +7,25 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    console.log('=================================');
+    console.log('NODE_ENV', process.env.NODE_ENV);
+    console.log('=================================');
     if (process.env.NODE_ENV === 'test') {
+      return {
+        type: 'postgres',
+        host: this.configService.get<string>('DATABASE_HOST'),
+        port: this.configService.get<number>('DATABASE_PORT'),
+        username: this.configService.get<string>('DATABASE_USERNAME'),
+        password: this.configService.get<string>('DATABASE_PASSWORD'),
+        database: this.configService.get<string>('DATABASE_NAME'),
+        entities: [__dirname + '/../**/*.entity.{js,ts}'],
+      };
+    }
+
+    if (
+      process.env.NODE_ENV === 'dev' ||
+      process.env.NODE_ENV === 'development'
+    ) {
       return {
         type: 'postgres',
         host: this.configService.get<string>('DATABASE_HOST'),
